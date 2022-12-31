@@ -1,0 +1,349 @@
+esphome:
+  name: avfan1
+  platform: ESP32
+  board: wemos_d1_mini32
+#  includes:
+#    - hwheater/src/water_flow.h
+    
+ota:
+  password: "trek6666"
+
+wifi:
+  ssid: "hill"
+  password: "trek6666"
+  fast_connect: true
+  manual_ip:
+    static_ip: 192.168.0.191
+    gateway: 192.168.0.1
+    subnet: 255.255.255.0
+    dns1: 192.168.0.1
+    dns2: 8.8.8.8
+  
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "AVfan1 Fallback Hotspot"
+    password: "trek6666"
+    
+
+captive_portal:
+
+globals:
+  - id: my_global_int
+    type: int
+    restore_value: no
+    initial_value: '0'
+
+
+mqtt:
+  broker: 192.168.0.100
+  username: "john"
+  password: "trek6666"
+  
+#  on_message:
+#    - topic: hwheater/switch/hwheater_water_valve_closed/command
+#      payload: 'ON'
+ #     then:
+#        - lambda: |-
+#           id(my_global_int) += 1;
+
+#esp32_ble_beacon:
+#  type: iBeacon
+#  uuid: 'c29ce823-e67a-4e71-bff2-abaa32e77a98'
+
+web_server:
+  port: 80
+
+logger:
+  level: DEBUG
+  
+switch:
+  - platform: restart
+    name: "AVfan1 Restart"
+  
+dallas:
+  - pin: GPIO27
+    update_interval: 60s
+  
+output:
+  - platform: ledc
+    pin: GPIO13
+    id: fan1
+    frequency: 25600Hz
+    
+  - platform: ledc
+    pin: GPIO25
+    id: fan2
+    frequency: 25600Hz
+    
+  - platform: ledc
+    pin: GPIO27
+    id: fan3
+    frequency: 25600Hz
+    
+  - platform: ledc
+    pin: GPIO32
+    id: fan4
+    frequency: 25600Hz
+
+  - platform: ledc
+    id: led1
+    pin: GPIO2
+ 
+light:
+  # On-Board LED
+  - platform: monochromatic
+    name: "avfan1 status light"
+    id: status_light
+    output: led1
+
+sensor:
+  - platform: pulse_counter
+    pin: GPIO33
+    unit_of_measurement: 'rpm'
+    name: "AVfan1 Mon 1"
+    update_interval: 60s
+    filters:
+      - multiply: 0.5
+
+  - platform: pulse_counter
+    pin: GPIO34
+    unit_of_measurement: 'rpm'
+    name: "AVfan1 Mon 2"
+    update_interval: 60s
+    filters:
+      - multiply: 0.5
+
+  - platform: pulse_counter
+    pin: GPIO35
+    unit_of_measurement: 'rpm'
+    name: "AVfan1 Mon 3"
+    update_interval: 60s
+    filters:
+      - multiply: 0.5
+
+  - platform: pulse_counter
+    pin: GPIO39
+    unit_of_measurement: 'rpm'
+    name: "AVfan1 Mon 4"
+    update_interval: 60s
+    filters:
+      - multiply: 0.5       
+        
+  - platform: wifi_signal
+    name: "AVfan1 WiFi"
+    update_interval: 60s
+  - platform: uptime
+    name: "Avfan1 Uptime"
+    update_interval: 60s
+
+  - platform: dallas
+    address: 0x783c0af6490d3628
+    id: temp1
+    filters:
+      - offset: 0.0
+      #- lambda: return x * (9.0/5.0) + 32.0;
+    unit_of_measurement: "°C"
+    name: "AVfan1 Temperature 2"
+  - platform: dallas
+    address: 0x043c6ef649772f28
+    id: temp2
+    filters:
+      - offset: 0.8
+      #- lambda: return x * (9.0/5.0) + 32.0;
+    unit_of_measurement: "°C"
+    name: "AVfan1 Temperature 3"
+  - platform: dallas
+    address: 0xc13c01f09642c928
+    id: temp3
+    filters:
+      - offset: 0.0
+      #- lambda: return x * (9.0/5.0) + 32.0;
+    unit_of_measurement: "°C"
+    name: "AVfan1 Temperature 1 "
+
+  - platform: pid
+    climate_id: thermostat1
+    name: "AVfan1 1 PID Climate Result"
+    type: COOL
+  - platform: pid
+    climate_id: thermostat2
+    name: "AVfan1 2 PID Climate Result"
+    type: COOL
+  - platform: pid
+    climate_id: thermostat3
+    name: "AVfan1 3 PID Climate Result"
+    type: COOL
+    
+fan:
+  - platform: speed
+    output: fan1
+    id: fan1_speed
+    name: "AVfan1 Fan1 Speed"
+    on_speed_set:
+    - mqtt.publish:
+          topic: avfan1/fan1/speed/status
+          payload: !lambda |-
+            return to_string(id(fan1_speed).speed);
+
+  - platform: speed
+    output: fan2
+    id: fan2_speed
+    name: "AVfan1 Fan2 Speed"
+    on_speed_set:
+    - mqtt.publish:
+          topic: avfan1/fan2/speed/status
+          payload: !lambda |-
+            return to_string(id(fan2_speed).speed);
+          
+  - platform: speed
+    output: fan3
+    id: fan3_speed
+    name: "AVfan1 Fan3 Speed"
+    on_speed_set:
+    - mqtt.publish:
+          topic: avfan1/fan3/speed/status
+          payload: !lambda |-
+            return to_string(id(fan3_speed).speed);
+ 
+  - platform: speed
+    output: fan4
+    id: fan4_speed
+    name: "AVfan1 Fan4 Speed"
+    on_speed_set:
+    - mqtt.publish:
+        topic: avfan1/fan4/speed/status
+        payload: lambda |-
+            return to_string(id(fan4_speed).speed);
+    - light.turn_on:
+        id: status_light
+        #state: true
+        brightness: !lambda |-
+            int i = id(fan4_speed).speed;
+            float j = (float) i/100;
+            return j;
+       
+    - logger.log: 
+        format: "Slider Value %d"
+        args: ['id(fan4_speed).speed']
+    on_turn_on:
+    - light.turn_on:
+        #state: true
+        id: status_light
+        brightness: !lambda |-
+            int i = id(fan4_speed).speed;
+            float j = (float) i/100;
+            return j;
+                
+    on_turn_off:
+   # - light.turn_off: status_light
+     - light.turn_on:
+        #state: true
+        id: status_light
+        brightness: !lambda |-
+            float j = 0.0;
+            return j;
+
+      
+      
+
+
+
+    
+climate:
+  - platform: pid
+    name: "Thermostat1"
+    id: thermostat1
+    sensor: temp1
+    # It is summer right now, so 30c is a decent target.
+    default_target_temperature: 27°C
+    cool_output: fan1
+
+    # dummy heater. enable this if using autotune
+    # heat_output: console_heat_speed
+
+    # The extents of the HA Thermostat
+    visual:
+      min_temperature: 10°C
+      max_temperature: 50°C
+  
+    # See the README for setting up these parameters.
+    # These are over ridden by the number templates above.
+    control_parameters:
+      kp: 0.081
+      ki: 0.0016
+      kd: 3
+      
+  - platform: pid
+    name: "Thermostat2"
+    id: thermostat2
+    sensor: temp2
+
+    # It is summer right now, so 30c is a decent target.
+    default_target_temperature: 27°C
+    cool_output: fan2 
+
+    # dummy heater. enable this if using autotune
+    # heat_output: console_heat_speed
+
+    # The extents of the HA Thermostat
+    visual:
+      min_temperature: 10°C
+      max_temperature: 50°C
+  
+    # See the README for setting up these parameters.
+    # These are over ridden by the number templates above.
+    control_parameters:
+      kp: 0.081
+      ki: 0.0016
+      kd: 3
+
+  - platform: pid
+    name: "Thermostat3"
+    id: thermostat3
+    sensor: temp3
+
+    # It is summer right now, so 30c is a decent target.
+    default_target_temperature: 27°C
+    cool_output: fan3 
+
+    # dummy heater. enable this if using autotune
+    # heat_output: console_heat_speed
+
+    # The extents of the HA Thermostat
+    visual:
+      min_temperature: 10°C
+      max_temperature: 50°C
+  
+    # See the README for setting up these parameters.
+    # These are over ridden by the number templates above.
+    control_parameters:
+      kp: 0.081
+      ki: 0.0016
+      kd: 3
+
+text_sensor:
+  - platform: template
+    name: "AVfan1 Device Sensor"
+    lambda: |-
+      return {"D1 Mini32"};
+  - platform: version
+    name: "AVfan1 Version"
+  - platform: wifi_info
+    ip_address:
+      name: "AVfan1 IP Address"
+    ssid:
+      name: "AVfan1 Connected SSID"
+    bssid:
+      name: "AVfan1 Connected BSSID"
+    mac_address:
+      name: "AVfan1 Mac Wifi Address"
+  
+binary_sensor:
+  - platform: status
+    name: "AVfan1 Status"
+
+
+
+
+
