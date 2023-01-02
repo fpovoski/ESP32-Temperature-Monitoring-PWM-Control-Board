@@ -72,12 +72,12 @@ output:
     frequency: 25600Hz
     
   - platform: ledc
-    pin: GPIO25
+    pin: GPIO14
     id: fan2
     frequency: 25600Hz
     
   - platform: ledc
-    pin: GPIO27
+    pin: GPIO25
     id: fan3
     frequency: 25600Hz
     
