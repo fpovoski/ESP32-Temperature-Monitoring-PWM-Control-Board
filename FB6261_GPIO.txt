@@ -1,0 +1,42 @@
+GPIO	PIN			Input	Output	Notes
+0	25			pulled up	OK	outputs PWM signal at boot, must be LOW to enter flashing mode
+1	35	HR1		TX pin	OK	debug output at boot
+2	24			OK	OK	connected to on-board LED, must be left floating or LOW to enter flashing mode
+3	34	HR2		OK	RX pin	HIGH at boot
+4	26			OK	OK	
+5	29	HL7		OK	OK	outputs PWM signal at boot, strapping pin
+6	20			x	x	connected to the integrated SPI flash
+7	21			x	x	connected to the integrated SPI flash
+8	22			x	x	connected to the integrated SPI flash
+9	17			x	x	connected to the integrated SPI flash
+10	18			x	x	connected to the integrated SPI flash
+11	19			x	x	connected to the integrated SPI flash
+12	14			OK	OK	boot fails if pulled high, strapping pin
+13	16	PWM1		OK	OK	
+14	13	PWM2		OK	OK	outputs PWM signal at boot
+15	23			OK	OK	outputs PWM signal at boot, strapping pin
+16	27	HR6		OK	OK	
+17	28	HR5		OK	OK	
+18	30	HL4		OK	OK	
+19	31	HL5		OK	OK
+20	
+21	33	HR4		OK	OK	
+22	36	HR3		OK	OK	
+23	37	HL6		OK	OK
+24	
+25	10	PWM3		OK	OK	
+26	11	HL3		OK	OK	
+27	12	1WIRE		OK	OK	
+32	8	PWM4		OK	OK	
+33	9	RPM1		OK	OK	
+34	6	RPM2		OK		input only
+35	7	RPM3		OK		input only
+36	4	HL2		OK		input only
+39	5	RPM4		OK		input only
+EN	3	HL1
+3.3	2	HL8
+GND	1	HR7
+GND	15
+GND	38
+NC	32
++5		HR8
