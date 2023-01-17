@@ -8,7 +8,9 @@ esphome:
   platform: ESP32
   board: wemos_d1_mini32
 
-    
+preferences:
+  flash_write_interval: 10000s
+  
 ota:
   password: "trek6666"
 # Replace with your Wifi credentials here
