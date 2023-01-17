@@ -1,23 +1,28 @@
+substitutions:
+   alarm_temp: "50" # Threshold for MAX Fan Speed and Alarm when implemented
+   ptemp: "15"
+   itemp: "0.4"
+
 esphome:
   name: avfan1
   platform: ESP32
   board: wemos_d1_mini32
-#  includes:
-#    - hwheater/src/water_flow.h
+
     
 ota:
   password: "trek6666"
-
+# Replace with your Wifi credentials here
 wifi:
   ssid: "hill"
   password: "trek6666"
   fast_connect: true
-  manual_ip:
-    static_ip: 192.168.0.191
-    gateway: 192.168.0.1
-    subnet: 255.255.255.0
-    dns1: 192.168.0.1
-    dns2: 8.8.8.8
+  #example static IP settings
+  #manual_ip:
+  #  static_ip: 192.168.0.191
+  #  gateway: 192.168.0.1
+  #  subnet: 255.255.255.0
+  #  dns1: 192.168.0.1
+  #  dns2: 8.8.8.8
   
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
@@ -29,41 +34,139 @@ wifi:
 captive_portal:
 
 globals:
-  - id: my_global_int
-    type: int
+  - id: fan1_sum
+    type: float
     restore_value: no
     initial_value: '0'
-
+  - id: fan2_sum
+    type: float
+    restore_value: no
+    initial_value: '0'
+  - id: fan3_sum
+    type: float
+    restore_value: no
+    initial_value: '0'
+  - id: fan4_sum
+    type: float
+    restore_value: no
+    initial_value: '0'
 
 mqtt:
   broker: 192.168.0.100
   username: "john"
   password: "trek6666"
   
-#  on_message:
-#    - topic: hwheater/switch/hwheater_water_valve_closed/command
-#      payload: 'ON'
- #     then:
-#        - lambda: |-
-#           id(my_global_int) += 1;
-
-#esp32_ble_beacon:
-#  type: iBeacon
-#  uuid: 'c29ce823-e67a-4e71-bff2-abaa32e77a98'
-
 web_server:
   port: 80
 
 logger:
   level: DEBUG
   
+
+number:
+  - platform: template
+    id: set_target_1
+    name: "AVfan1 Target 1"
+    optimistic: true
+    min_value: 15
+    max_value: 50
+    initial_value: 26
+    step: 1
+    restore_value: true
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+
+  - platform: template
+    id: set_target_2
+    name: "AVfan1 Target 2"
+    optimistic: true
+    min_value: 15
+    max_value: 50
+    initial_value: 26
+    step: 1
+    restore_value: true
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+
+  - platform: template
+    id: set_target_3
+    name: "AVfan1 Target 3"
+    optimistic: True
+    min_value: 15
+    max_value: 50
+    initial_value: 26
+    step: 1
+    restore_value: true
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+    
+  - platform: template
+    id: set_target_4
+    name: "AVfan1 Target 4"
+    optimistic: true
+    min_value: 15
+    max_value: 50
+    initial_value: 26
+    step: 1
+    restore_value: true
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+  
 switch:
   - platform: restart
     name: "AVfan1 Restart"
+
+  - platform: template
+    id: auto_fan1
+    name: "Avfan1 Fan1 Auto Mode"
+    restore_mode: RESTORE_DEFAULT_ON
+    restore_state: yes
+    optimistic: true
+    #turn_on_action:
+    #  - fan.turn_on : fan1_speed
+      
+    turn_off_action:
+      - fan.turn_off : fan1_speed
+
+  - platform: template
+    id: auto_fan2
+    name: "Avfan1 Fan2 Auto Mode"
+    restore_mode: RESTORE_DEFAULT_ON
+    restore_state: yes
+    optimistic: true
+    #turn_on_action:
+    #  - fan.turn_on : fan2_speed
+      
+    turn_off_action:
+      - fan.turn_off : fan2_speed
+
+  - platform: template
+    id: auto_fan3
+    name: "Avfan1 Fan3 Auto Mode"
+    restore_mode: RESTORE_DEFAULT_ON
+    restore_state: yes
+    optimistic: true
+    #turn_on_action:
+    #  - fan.turn_on : fan3_speed
+      
+    turn_off_action:
+      - fan.turn_off : fan3_speed
+
+  - platform: template
+    id: auto_fan4
+    name: "Avfan1 Fan4 Auto Mode"
+    restore_mode: RESTORE_DEFAULT_ON
+    restore_state: yes
+    optimistic: True
+    #turn_on_action:
+    #  - fan.turn_on : fan4_speed
+      
+    turn_off_action:
+      - fan.turn_off : fan4_speed
   
 dallas:
   - pin: GPIO27
-    update_interval: 60s
+    update_interval: 5s
   
 output:
   - platform: ledc
@@ -93,16 +196,24 @@ output:
 light:
   # On-Board LED
   - platform: monochromatic
-    name: "avfan1 status light"
+#    name: " status light"
     id: status_light
     output: led1
 
+debug:
+  update_interval: 5s
+
+
 sensor:
+  - platform: debug
+    free:
+      name: "Heap Free"
+
   - platform: pulse_counter
     pin: GPIO33
     unit_of_measurement: 'rpm'
     name: "AVfan1 Mon 1"
-    update_interval: 60s
+    update_interval: 5s
     filters:
       - multiply: 0.5
 
@@ -110,7 +221,7 @@ sensor:
     pin: GPIO34
     unit_of_measurement: 'rpm'
     name: "AVfan1 Mon 2"
-    update_interval: 60s
+    update_interval: 5s
     filters:
       - multiply: 0.5
 
@@ -118,7 +229,7 @@ sensor:
     pin: GPIO35
     unit_of_measurement: 'rpm'
     name: "AVfan1 Mon 3"
-    update_interval: 60s
+    update_interval: 5s
     filters:
       - multiply: 0.5
 
@@ -126,203 +237,166 @@ sensor:
     pin: GPIO39
     unit_of_measurement: 'rpm'
     name: "AVfan1 Mon 4"
-    update_interval: 60s
+    update_interval: 5s
     filters:
       - multiply: 0.5       
         
   - platform: wifi_signal
     name: "AVfan1 WiFi"
-    update_interval: 60s
+    update_interval: 30s
   - platform: uptime
     name: "Avfan1 Uptime"
-    update_interval: 60s
+    update_interval: 30s
 
+# Connect your Dallas sensors with DEBUG enabled and search for your unique device
+# addresses and replace the one-wire addresses below
+#[18:16:42][D][dallas.sensor:084]:     0x8b3ca8f64935b228 4
+#[18:16:42][D][dallas.sensor:084]:     0x783c0af6490d3628 2
+#[18:16:42][D][dallas.sensor:084]:     0xc13c01f09642c928 1
+#[18:16:42][D][dallas.sensor:084]:     0x043c6ef649772f28 3
   - platform: dallas
-    address: 0x783c0af6490d3628
+    address: 0xc13c01f09642c928
     id: temp1
     filters:
       - offset: 0.0
       #- lambda: return x * (9.0/5.0) + 32.0;
     unit_of_measurement: "°C"
-    name: "AVfan1 Temperature 2"
+    name: "AVfan1 Temperature 1"
+    on_value: 
+      # example using GLOBAL to maintain persistant SUM for each fan
+      - lambda: !lambda |
+           if (id(auto_fan1).state) {
+             float fan_actual_temp =  id(temp1).state;
+             float fan_desired_temp = id(set_target_1).state;
+             float diff = fan_actual_temp - fan_desired_temp;
+             id(fan1_sum) =id(fan1_sum) + diff;
+             float fan_pdiff=diff * $ptemp;
+             float fan_idiff= id(fan1_sum) * $itemp;
+             float fan_set_speed = fan_pdiff + fan_idiff;
+             if (fan_set_speed >100) fan_set_speed =100;
+             if (fan_set_speed <10) fan_set_speed=1;
+             if (id(fan1_sum) >100) id(fan1_sum) = 100;
+             if (id(fan1_sum) < -100) id(fan1_sum) = -100;
+             auto call = id(fan1_speed).turn_on();
+             call.set_speed(fan_set_speed);
+             call.perform();
+           }
+
+
   - platform: dallas
-    address: 0x043c6ef649772f28
+    address: 0x783c0af6490d3628
     id: temp2
     filters:
-      - offset: 0.8
+      - offset: 0.0
       #- lambda: return x * (9.0/5.0) + 32.0;
     unit_of_measurement: "°C"
-    name: "AVfan1 Temperature 3"
+    name: "AVfan1 Temperature 2"
+    on_value: 
+
+      - lambda: !lambda |
+           if (id(auto_fan2).state) {
+             float fan_actual_temp =  id(temp2).state;
+             float fan_desired_temp = id(set_target_2).state;
+             float diff = fan_actual_temp - fan_desired_temp;
+             id(fan2_sum) =id(fan2_sum) + diff;
+             float fan_pdiff=diff * $ptemp;
+             float fan_idiff= id(fan2_sum) * $itemp;
+             float fan_set_speed = fan_pdiff + fan_idiff;
+             if (fan_set_speed >100) fan_set_speed =100;
+             if (fan_set_speed <10) fan_set_speed=1;
+             if (id(fan2_sum) >100) id(fan2_sum) = 100;
+             if (id(fan2_sum) < -100) id(fan2_sum) = -100;
+             auto call = id(fan2_speed).turn_on();
+             call.set_speed(fan_set_speed);
+             call.perform();
+           }
+
   - platform: dallas
-    address: 0xc13c01f09642c928
+    address: 0x043c6ef649772f28
     id: temp3
     filters:
       - offset: 0.0
       #- lambda: return x * (9.0/5.0) + 32.0;
     unit_of_measurement: "°C"
-    name: "AVfan1 Temperature 1 "
+    name: "AVfan1 Temperature 3"
+    on_value:
+      - lambda: !lambda |
+           if (id(auto_fan3).state) {
+             float fan_actual_temp =  id(temp3).state;
+             float fan_desired_temp = id(set_target_3).state;
+             float diff = fan_actual_temp - fan_desired_temp;
+             id(fan3_sum) =id(fan3_sum) + diff;
+             float fan_pdiff=diff * $ptemp;
+             float fan_idiff= id(fan3_sum) * $itemp;
+             float fan_set_speed = fan_pdiff + fan_idiff;
+             if (fan_set_speed >100) fan_set_speed =100;
+             if (fan_set_speed <10) fan_set_speed=1;
+             if (id(fan3_sum) >100) id(fan3_sum) = 100;
+             if (id(fan3_sum) < -100) id(fan3_sum) = -100;
+             auto call = id(fan3_speed).turn_on();
+             call.set_speed(fan_set_speed);
+             call.perform();
+           }
 
-  - platform: pid
-    climate_id: thermostat1
-    name: "AVfan1 1 PID Climate Result"
-    type: COOL
-  - platform: pid
-    climate_id: thermostat2
-    name: "AVfan1 2 PID Climate Result"
-    type: COOL
-  - platform: pid
-    climate_id: thermostat3
-    name: "AVfan1 3 PID Climate Result"
-    type: COOL
-    
+
+  - platform: dallas
+    address: 0x8b3ca8f64935b228
+    id: temp4
+    filters:
+ #     - offset: 0.8
+      #- lambda: return x * (9.0/5.0) + 32.0;
+    unit_of_measurement: "°C"
+    name: "AVfan1 Temperature 4"
+    on_value:
+      - lambda: !lambda |
+           if (id(auto_fan4).state) {
+             float fan_actual_temp =  id(temp4).state;
+             float fan_desired_temp = id(set_target_4).state;
+             float diff = fan_actual_temp - fan_desired_temp;
+             id(fan4_sum) =id(fan4_sum) + diff;
+             float fan_pdiff=diff * $ptemp;
+             float fan_idiff= id(fan4_sum) * $itemp;
+             float fan_set_speed = fan_pdiff + fan_idiff;
+             if (fan_set_speed >100) fan_set_speed =100;
+             if (fan_set_speed <10) fan_set_speed=1;
+             if (id(fan4_sum) >100) id(fan4_sum) = 100;
+             if (id(fan4_sum) < -100) id(fan4_sum) = -100;
+             auto call = id(fan4_speed).turn_on();
+             call.set_speed(fan_set_speed);
+             call.perform();
+           }
+
+     
 fan:
   - platform: speed
     output: fan1
     id: fan1_speed
     name: "AVfan1 Fan1 Speed"
-    on_speed_set:
-    - mqtt.publish:
-          topic: avfan1/fan1/speed/status
-          payload: !lambda |-
-            return to_string(id(fan1_speed).speed);
+    restore_mode: RESTORE_DEFAULT_OFF
 
   - platform: speed
     output: fan2
     id: fan2_speed
     name: "AVfan1 Fan2 Speed"
-    on_speed_set:
-    - mqtt.publish:
-          topic: avfan1/fan2/speed/status
-          payload: !lambda |-
-            return to_string(id(fan2_speed).speed);
+    restore_mode: RESTORE_DEFAULT_OFF
           
   - platform: speed
     output: fan3
     id: fan3_speed
     name: "AVfan1 Fan3 Speed"
-    on_speed_set:
-    - mqtt.publish:
-          topic: avfan1/fan3/speed/status
-          payload: !lambda |-
-            return to_string(id(fan3_speed).speed);
+    restore_mode: RESTORE_DEFAULT_OFF
  
   - platform: speed
     output: fan4
     id: fan4_speed
     name: "AVfan1 Fan4 Speed"
-    on_speed_set:
-    - mqtt.publish:
-        topic: avfan1/fan4/speed/status
-        payload: lambda |-
-            return to_string(id(fan4_speed).speed);
-    - light.turn_on:
-        id: status_light
-        #state: true
-        brightness: !lambda |-
-            int i = id(fan4_speed).speed;
-            float j = (float) i/100;
-            return j;
-       
-    - logger.log: 
-        format: "Slider Value %d"
-        args: ['id(fan4_speed).speed']
-    on_turn_on:
-    - light.turn_on:
-        #state: true
-        id: status_light
-        brightness: !lambda |-
-            int i = id(fan4_speed).speed;
-            float j = (float) i/100;
-            return j;
-                
-    on_turn_off:
-   # - light.turn_off: status_light
-     - light.turn_on:
-        #state: true
-        id: status_light
-        brightness: !lambda |-
-            float j = 0.0;
-            return j;
+    restore_mode: RESTORE_DEFAULT_OFF
 
-      
-      
-
-
-
-    
-climate:
-  - platform: pid
-    name: "Thermostat1"
-    id: thermostat1
-    sensor: temp1
-    # It is summer right now, so 30c is a decent target.
-    default_target_temperature: 27°C
-    cool_output: fan1
-
-    # dummy heater. enable this if using autotune
-    # heat_output: console_heat_speed
-
-    # The extents of the HA Thermostat
-    visual:
-      min_temperature: 10°C
-      max_temperature: 50°C
-  
-    # See the README for setting up these parameters.
-    # These are over ridden by the number templates above.
-    control_parameters:
-      kp: 0.081
-      ki: 0.0016
-      kd: 3
-      
-  - platform: pid
-    name: "Thermostat2"
-    id: thermostat2
-    sensor: temp2
-
-    # It is summer right now, so 30c is a decent target.
-    default_target_temperature: 27°C
-    cool_output: fan2 
-
-    # dummy heater. enable this if using autotune
-    # heat_output: console_heat_speed
-
-    # The extents of the HA Thermostat
-    visual:
-      min_temperature: 10°C
-      max_temperature: 50°C
-  
-    # See the README for setting up these parameters.
-    # These are over ridden by the number templates above.
-    control_parameters:
-      kp: 0.081
-      ki: 0.0016
-      kd: 3
-
-  - platform: pid
-    name: "Thermostat3"
-    id: thermostat3
-    sensor: temp3
-
-    # It is summer right now, so 30c is a decent target.
-    default_target_temperature: 27°C
-    cool_output: fan3 
-
-    # dummy heater. enable this if using autotune
-    # heat_output: console_heat_speed
-
-    # The extents of the HA Thermostat
-    visual:
-      min_temperature: 10°C
-      max_temperature: 50°C
-  
-    # See the README for setting up these parameters.
-    # These are over ridden by the number templates above.
-    control_parameters:
-      kp: 0.081
-      ki: 0.0016
-      kd: 3
 
 text_sensor:
+  - platform: debug
+    reset_reason:
+      name: "Reset Reason"
   - platform: template
     name: "AVfan1 Device Sensor"
     lambda: |-
