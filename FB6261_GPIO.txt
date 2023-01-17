@@ -1,10 +1,15 @@
-GPIO	PIN			Input	Output	Notes
-0	25			pulled up	OK	outputs PWM signal at boot, must be LOW to enter flashing mode
-1	35	HR1		TX pin	OK	debug output at boot
-2	24			OK	OK	connected to on-board LED, must be left floating or LOW to enter flashing mode
-3	34	HR2		OK	RX pin	HIGH at boot
+ESP32 Temperature Monitoring PWM Control Board, Part No. FB6261
+Connector to GPIO Mapping.
+
+GPIO	PIN	CONNECTOR		Input	Output	Notes
+0	25			pulled up	OK	outputs PWM signal at boot,
+						 must be LOW to enter flashing mode
+1	35	P2.1		TX pin	OK	debug output at boot
+2	24			OK	OK	connected to on-board LED, must be left
+						 floating or LOW to enter flashing mode
+3	34	P2.2		OK	RX pin	HIGH at boot
 4	26			OK	OK	
-5	29	HL7		OK	OK	outputs PWM signal at boot, strapping pin
+5	29	P1.7		OK	OK	outputs PWM signal at boot, strapping pin
 6	20			x	x	connected to the integrated SPI flash
 7	21			x	x	connected to the integrated SPI flash
 8	22			x	x	connected to the integrated SPI flash
@@ -15,28 +20,58 @@ GPIO	PIN			Input	Output	Notes
 13	16	PWM1		OK	OK	
 14	13	PWM2		OK	OK	outputs PWM signal at boot
 15	23			OK	OK	outputs PWM signal at boot, strapping pin
-16	27	HR6		OK	OK	
-17	28	HR5		OK	OK	
-18	30	HL4		OK	OK	
-19	31	HL5		OK	OK
+16	27	P2.6		OK	OK	
+17	28	P2.5		OK	OK	
+18	30	P1.4		OK	OK	
+19	31	P1.5		OK	OK
 20	
-21	33	HR4		OK	OK	
-22	36	HR3		OK	OK	
-23	37	HL6		OK	OK
+21	33	P2.4		OK	OK	
+22	36	P2.3		OK	OK	
+23	37	P1.6		OK	OK
 24	
 25	10	PWM3		OK	OK	
-26	11	HL3		OK	OK	
+26	11	P1.3		OK	OK	
 27	12	1WIRE		OK	OK	
 32	8	PWM4		OK	OK	
 33	9	RPM1		OK	OK	
 34	6	RPM2		OK		input only
 35	7	RPM3		OK		input only
-36	4	HL2		OK		input only
+36	4	P1.2		OK		input only
 39	5	RPM4		OK		input only
-EN	3	HL1
-3.3	2	HL8
-GND	1	HR7
+EN	3	P1.1
+3.3	2	P1.8
+GND	1	P2.7
 GND	15
 GND	38
 NC	32
-+5		HR8
++5		P2.8
+
+
+Dallas One-wire Connectors
+CONN	PIN1	PIN2	PIN3
+J1	+3.3V	IO27	GND
+J2	+3.3V	IO27	GND
+J2	+3.3V	IO27	GND
+
+PWM PC Style Headers: 	PIN3 - Fan Speed Input, 5V Tolerant, 1K Pullup Resistor
+			PIN4 - Fan PWM Output, 5V Drive
+			
+CONN	PIN1	PIN2	PIN3	PIN4
+J4	GND	+12V	IO33	IO13
+J5	GND	+12V	IO34	IO14
+J6	GND	+12V	IO35	IO25
+J7	GND	+12V	IO39	IO32
+
+J8 	USB2.0 on USB-C (USB can be connected when +12V but not advised).
+J9	+12V 	3amps Max. to board and fans. 
+
+P1 and P2  - Standard WEMOS D1 Expansion Header
+
+DO NOT ATTEMPT TO POWER FANS FROM USB-C.
+
+Device is flashed with an exmaple ESPhome image that has manual control over fans 
+and enabled automatic control based the desired temperature setting. To place on 
+WiFi network use 2.4G phone to connect to "AVFAN1 Fallback Hotspot" and
+update SSID and PASSWORD. Downlaod the example code from 
+https://github.com/fpovoski/ESP32-Temperature-Monitoring-PWM-Control-Board
+(avfan1.yaml) and update WiFI and MQTT server credentials. Flash over USB or ethernet.
