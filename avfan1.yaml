@@ -10,7 +10,7 @@ esphome:
 
 preferences:
   flash_write_interval: 10000s
-  
+    
 ota:
   password: "trek6666"
 # Replace with your Wifi credentials here
@@ -194,6 +194,9 @@ output:
   - platform: ledc
     id: led1
     pin: GPIO2
+
+status_led:
+  pin: GPIO2
  
 light:
   # On-Board LED
@@ -260,6 +263,7 @@ sensor:
     address: 0xc13c01f09642c928
     id: temp1
     filters:
+      - filter_out: NaN
       - offset: 0.0
       #- lambda: return x * (9.0/5.0) + 32.0;
     unit_of_measurement: "°C"
@@ -283,12 +287,20 @@ sensor:
              call.set_speed(fan_set_speed);
              call.perform();
            }
+      - logger.log:
+          format: "SUM 1: %.1f"
+          args: ['id(fan1_sum)']
+          level: INFO
+          
+ 
+
 
 
   - platform: dallas
     address: 0x783c0af6490d3628
     id: temp2
     filters:
+      - filter_out: NaN
       - offset: 0.0
       #- lambda: return x * (9.0/5.0) + 32.0;
     unit_of_measurement: "°C"
@@ -312,11 +324,16 @@ sensor:
              call.set_speed(fan_set_speed);
              call.perform();
            }
+      - logger.log:
+          format: "SUM 2: %.1f"
+          args: ['id(fan2_sum)']
+          level: INFO          
 
   - platform: dallas
     address: 0x043c6ef649772f28
     id: temp3
     filters:
+      - filter_out: NaN
       - offset: 0.0
       #- lambda: return x * (9.0/5.0) + 32.0;
     unit_of_measurement: "°C"
@@ -339,12 +356,17 @@ sensor:
              call.set_speed(fan_set_speed);
              call.perform();
            }
+      - logger.log:
+          format: "SUM 3: %.1f"
+          args: ['id(fan3_sum)']
+          level: INFO
 
 
   - platform: dallas
     address: 0x8b3ca8f64935b228
     id: temp4
     filters:
+      - filter_out: NaN
  #     - offset: 0.8
       #- lambda: return x * (9.0/5.0) + 32.0;
     unit_of_measurement: "°C"
@@ -367,6 +389,10 @@ sensor:
              call.set_speed(fan_set_speed);
              call.perform();
            }
+      - logger.log:
+          format: "SUM 4: %.1f"
+          args: ['id(fan4_sum)']
+          level: INFO
 
      
 fan:
@@ -418,8 +444,3 @@ text_sensor:
 binary_sensor:
   - platform: status
     name: "AVfan1 Status"
-
-
-
-
-
