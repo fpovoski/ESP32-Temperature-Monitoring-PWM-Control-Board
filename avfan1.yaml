@@ -1,3 +1,4 @@
+
 substitutions:
    alarm_temp: "50" # Threshold for MAX Fan Speed and Alarm when implemented
    ptemp: "20"
@@ -150,7 +151,6 @@ switch:
     id: auto_fan1
     name: "Avfan1 Fan1 Auto Mode"
     restore_mode: RESTORE_DEFAULT_ON
-    restore_state: yes
     optimistic: true
     #turn_on_action:
     #  - fan.turn_on : fan1_speed
@@ -162,7 +162,6 @@ switch:
     id: auto_fan2
     name: "Avfan1 Fan2 Auto Mode"
     restore_mode: RESTORE_DEFAULT_ON
-    restore_state: yes
     optimistic: true
     #turn_on_action:
     #  - fan.turn_on : fan2_speed
@@ -174,7 +173,6 @@ switch:
     id: auto_fan3
     name: "Avfan1 Fan3 Auto Mode"
     restore_mode: RESTORE_DEFAULT_ON
-    restore_state: yes
     optimistic: true
     #turn_on_action:
     #  - fan.turn_on : fan3_speed
@@ -186,7 +184,6 @@ switch:
     id: auto_fan4
     name: "Avfan1 Fan4 Auto Mode"
     restore_mode: RESTORE_DEFAULT_ON
-    restore_state: yes
     optimistic: True
     #turn_on_action:
     #  - fan.turn_on : fan4_speed
@@ -235,11 +232,22 @@ light:
 
  #debug:
  # update_interval: 5s
+i2c:
+  sda: 17
+  scl: 16
+  scan: true
+  id: bus_a
 
 sensor:
  # - platform: debug
  #   free:
  #     name: "Heap Free"
+  - platform: aht10
+    temperature:
+      name: "AVfan1 Room Temperature"
+    humidity:
+      name: "AVfan1 Room Humidity"
+    update_interval: 5s
 
   - platform: pulse_counter
     pin: GPIO33
@@ -471,8 +479,3 @@ text_sensor:
 binary_sensor:
   - platform: status
     name: "AVfan1 Status"
-
-
-
-
-
