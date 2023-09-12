@@ -1,4 +1,4 @@
-ESP32 Temperature Monitoring PWM Control Board, Part No. FB6261
+ 12VESP32 Temperature Monitoring PWM Control Board, Part No. FB6261
 
 * DO NOT ATTEMPT TO POWER FANS FROM USB-C. Supplied power (5v-14V) to barrel connector
 needs to match the voltage of the PWM fan (or other device) you are driving. Board has an onboard
@@ -40,8 +40,8 @@ GPIO	PIN	CONNECTOR		Input	Output	Notes
 10	18			x	x	connected to the integrated SPI flash
 11	19			x	x	connected to the integrated SPI flash
 12	14			OK	OK	boot fails if pulled high, strapping pin
-13	16	PWM1		OK	OK	
-14	13	PWM2		OK	OK	outputs PWM signal at boot
+13	16	PWM1-(J4)	OK	OK	
+14	13	PWM2-(J5)	OK	OK	outputs PWM signal at boot
 15	23			OK	OK	outputs PWM signal at boot, strapping pin
 16	27	P2.6		OK	OK	
 17	28	P2.5		OK	OK	
@@ -52,15 +52,15 @@ GPIO	PIN	CONNECTOR		Input	Output	Notes
 22	36	P2.3		OK	OK	
 23	37	P1.6		OK	OK
 24	
-25	10	PWM3		OK	OK	
+25	10	PWM3-(J6)	OK	OK	
 26	11	P1.3		OK	OK	
 27	12	1WIRE		OK	OK	
-32	8	PWM4		OK	OK	
-33	9	RPM1		OK	OK	
-34	6	RPM2		OK		input only
-35	7	RPM3		OK		input only
+32	8	PWM4-(J7)	OK	OK	
+33	9	RPM1-(J4)	OK	OK	
+34	6	RPM2-(J5)	OK		input only
+35	7	RPM3-(J6)	OK		input only
 36	4	P1.2		OK		input only
-39	5	RPM4		OK		input only
+39	5	RPM4-(J7)	OK		input only
 EN	3	P1.1
 3.3	2	P1.8
 GND	1	P2.7
