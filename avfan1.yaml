@@ -1,4 +1,6 @@
 
+# Four automatically controlled PWM fan outputs (J4-J7), each set by four target temperatures, maintained by four Dallas sensor's temperatures. MQTT enabled. Home Assistant API disabled. DHCP enabled.
+# Other control configurations available with modification of Dallas platform LAMBDA function. Contact us at esp32andmore@gmail.com for no cost customization.
 substitutions:
    alarm_temp: "50" # Threshold for MAX Fan Speed and Alarm when implemented
    ptemp: "20"
@@ -6,12 +8,25 @@ substitutions:
 
 esphome:
   name: avfan1
-  platform: ESP32
-  board: wemos_d1_mini32
+  friendly_name: avfan1
 
+  on_boot:
+  - priority: 900.0
+    then:
+      - lambda: |-
+          id(cpu_speed) = ESP.getCpuFreqMHz();
+
+esp32:
+  board: wemos_d1_mini32
+  framework:
+    type: arduino
 
 preferences:
   flash_write_interval: 10min
+
+#api:
+#  encryption:
+#    key: "itqzvhZMJj8wuTJX0GTOuL/ffESFROzUlmcO0u2+sfo="  #use your own HA generated Key
     
 ota:
   password: "trek6666"
@@ -27,14 +42,12 @@ wifi:
     #subnet: 255.255.255.0
     #dns1: 192.168.0.1
     #dns2: 8.8.8.8
-  
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: "AVfan1 Fallback Hotspot"
     password: "trek6666"
     
-
 captive_portal:
 
 globals:
@@ -70,19 +83,21 @@ globals:
     type: int
     restore_value: True
     initial_value: '26'
-
+  - id: cpu_speed
+    type: int
+    restore_value: no
+    initial_value: "0"
 
 mqtt:
-  broker: 192.168.0.100
-  username: "john"
-  password: "trek6666"
+  broker: 192.168.0.100   # use your own MQTT server address and credentials
+#  username: "john"
+#  password: "trek6666"
   
 web_server:
   port: 80
 
 logger:
-  level: Debug
-  
+  level: Error
 
 number:
   - platform: template
@@ -96,9 +111,6 @@ number:
     restore_value: True
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
-   # on_value:
-      #then:
-        #lambda: 'ESP_LOGI("number", "value: %f", x);'
 
   - platform: template
     id: set_target_temp_2
@@ -135,7 +147,6 @@ number:
     restore_value: true
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
-
   
 switch:
   - platform: restart
@@ -151,10 +162,7 @@ switch:
     id: auto_fan1
     name: "Avfan1 Fan1 Auto Mode"
     restore_mode: RESTORE_DEFAULT_ON
-    optimistic: true
-    #turn_on_action:
-    #  - fan.turn_on : fan1_speed
-      
+    optimistic: true      
     turn_off_action:
       - fan.turn_off : fan1_speed
 
@@ -162,10 +170,7 @@ switch:
     id: auto_fan2
     name: "Avfan1 Fan2 Auto Mode"
     restore_mode: RESTORE_DEFAULT_ON
-    optimistic: true
-    #turn_on_action:
-    #  - fan.turn_on : fan2_speed
-      
+    optimistic: true    
     turn_off_action:
       - fan.turn_off : fan2_speed
 
@@ -173,10 +178,7 @@ switch:
     id: auto_fan3
     name: "Avfan1 Fan3 Auto Mode"
     restore_mode: RESTORE_DEFAULT_ON
-    optimistic: true
-    #turn_on_action:
-    #  - fan.turn_on : fan3_speed
-      
+    optimistic: true  
     turn_off_action:
       - fan.turn_off : fan3_speed
 
@@ -184,10 +186,7 @@ switch:
     id: auto_fan4
     name: "Avfan1 Fan4 Auto Mode"
     restore_mode: RESTORE_DEFAULT_ON
-    optimistic: True
-    #turn_on_action:
-    #  - fan.turn_on : fan4_speed
-      
+    optimistic: True  
     turn_off_action:
       - fan.turn_off : fan4_speed
   
@@ -216,22 +215,14 @@ output:
     id: fan4
     frequency: 25600Hz
 
-  - platform: ledc
-    id: led1
-    pin: GPIO2
-
-status_led:
-  pin: GPIO2
  
 light:
   # On-Board LED
-  - platform: monochromatic
-#    name: " status light"
+  - platform: status_led
+    name: "status light"
     id: status_light
-    output: led1
+    pin: GPIO2
 
- #debug:
- # update_interval: 5s
 i2c:
   sda: 17
   scl: 16
@@ -239,15 +230,12 @@ i2c:
   id: bus_a
 
 sensor:
- # - platform: debug
- #   free:
- #     name: "Heap Free"
-  - platform: aht10
-    temperature:
-      name: "AVfan1 Room Temperature"
-    humidity:
-      name: "AVfan1 Room Humidity"
-    update_interval: 5s
+#  - platform: aht10
+#    temperature:
+#      name: "AVfan1 Room Temperature"
+#    humidity:
+#      name: "AVfan1 Room Humidity"
+#    update_interval: 5s
 
   - platform: pulse_counter
     pin: GPIO33
@@ -284,8 +272,25 @@ sensor:
   - platform: wifi_signal
     name: "AVfan1 WiFi"
     update_interval: 30s
+  
   - platform: uptime
     name: "Avfan1 Uptime"
+    update_interval: 30s
+
+  - platform: template
+    name: "AVfan1 CPU Speed"
+    accuracy_decimals: 0
+    unit_of_measurement: Mhz
+    lambda: |-
+      return (id(cpu_speed));
+    entity_category: "diagnostic"
+
+  - platform: template
+    id: sys_esp_temperature
+    name: AVfan1 ESP Temperature
+    lambda: return temperatureRead();
+    unit_of_measurement: °C
+    device_class: TEMPERATURE
     update_interval: 30s
 
 # Connect your Dallas sensors with DEBUG enabled and search for your unique device
@@ -322,26 +327,16 @@ sensor:
              call.set_speed(fan_set_speed);
              call.perform();
            }
-     # - logger.log:
-     #     format: "SUM 1: %.1f"
-     #     args: ['id(fan1_sum)']
-     #      level: INFO
-          
- 
-
-
 
   - platform: dallas
     address: 0x783c0af6490d3628
     id: temp2
     filters:
       - filter_out: NaN
-      - offset: 0.0
-      #- lambda: return x * (9.0/5.0) + 32.0;
+      - offset: 0.0    #Calibration
     unit_of_measurement: "°C"
     name: "AVfan1 Temperature 2"
     on_value: 
-
       - lambda: !lambda |
            if (id(auto_fan2).state) {
              float fan_actual_temp =  id(temp2).state;
@@ -359,18 +354,13 @@ sensor:
              call.set_speed(fan_set_speed);
              call.perform();
            }
-    #  - logger.log:
-    #      format: "SUM 2: %.1f"
-    #      args: ['id(fan2_sum)']
-     #     level: INFO          
 
   - platform: dallas
     address: 0x043c6ef649772f28
     id: temp3
     filters:
       - filter_out: NaN
-      - offset: 0.0
-      #- lambda: return x * (9.0/5.0) + 32.0;
+      - offset: 0.0   #Calibration
     unit_of_measurement: "°C"
     name: "AVfan1 Temperature 3"
     on_value:
@@ -391,19 +381,13 @@ sensor:
              call.set_speed(fan_set_speed);
              call.perform();
            }
-    #  - logger.log:
-    #      format: "SUM 3: %.1f"
-    #      args: ['id(fan3_sum)']
-    #      level: INFO
-
 
   - platform: dallas
     address: 0x8b3ca8f64935b228
     id: temp4
     filters:
       - filter_out: NaN
- #     - offset: 0.8
-      #- lambda: return x * (9.0/5.0) + 32.0;
+      - offset: 0.0   #Calibration
     unit_of_measurement: "°C"
     name: "AVfan1 Temperature 4"
     on_value:
@@ -424,12 +408,7 @@ sensor:
              call.set_speed(fan_set_speed);
              call.perform();
            }
-     # - logger.log:
-     #     format: "SUM 4: %.1f"
-     #     args: ['id(fan4_sum)']
-     #     level: INFO
 
-     
 fan:
   - platform: speed
     output: fan1
@@ -455,15 +434,11 @@ fan:
     name: "AVfan1 Fan4 Speed"
     restore_mode: RESTORE_DEFAULT_OFF
 
-
 text_sensor:
- # - platform: debug
- #   reset_reason:
- #     name: "Reset Reason"
   - platform: template
     name: "AVfan1 Device Sensor"
     lambda: |-
-      return {"D1 Mini32"};
+      return {"ESP32 Control Board"};
   - platform: version
     name: "AVfan1 Version"
   - platform: wifi_info
