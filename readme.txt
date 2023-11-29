@@ -5,7 +5,7 @@ This ESP32 board features, the powerful ESP-WROOM-32E module, with integrated Wi
 
 Size: 84mm x 44mm with 2mm mounting holes
 Processor: ESP32 on ESP32-WROOM-E module with WiFi and BT V4.2
-Power Input: 12v @3 amps max via 5.5mm x 2.1mm barrel or 5v via USB-C connector.
+Power Input: 12v @ 4amps max via 5.5mm x 2.1mm barrel or 5v via USB-C connector. (J4-J7 Power only provided by barrel jack)
 On Board Regulation: 5v @2 amps switching regulator, 3.3v @800 milliamps.
 Input/Output: One 5v tolerant input (1k pullup) and one 5v driven output, with 12V power and ground on four, four-pin Molex KK series connectors. Compatible with most PWM PC style fans with speed return. Of course other use cases for these interfaces are available.
 Input/Output: Three screw down three position headers with common one-wire interface as well as 3.3v power and ground.
