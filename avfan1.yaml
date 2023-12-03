@@ -97,7 +97,7 @@ web_server:
   port: 80
 
 logger:
-  level: Error
+  level: Debug
 
 number:
   - platform: template
@@ -111,6 +111,7 @@ number:
     restore_value: True
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
+    command_topic: avfan1/number/avfan1_target_temp_1/command
 
   - platform: template
     id: set_target_temp_2
@@ -123,6 +124,7 @@ number:
     restore_value: true
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
+    command_topic: avfan1/number/avfan1_target_temp_2/command
 
   - platform: template
     id: set_target_temp_3
@@ -135,6 +137,7 @@ number:
     restore_value: true
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
+    command_topic: avfan1/number/avfan1_target_temp_3/command
     
   - platform: template
     id: set_target_temp_4
@@ -147,6 +150,7 @@ number:
     restore_value: true
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
+    command_topic: avfan1/number/avfan1_target_temp_4/command
   
 switch:
   - platform: restart
