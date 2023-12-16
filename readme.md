@@ -34,6 +34,7 @@ Flashed binary image  has "api:" disabled, MQTT enabled.
 
 * For customization, downlaod the example (flashed) code from 
 https://github.com/fpovoski/ESP32-Temperature-Monitoring-PWM-Control-Board/blob/main/ESPhome/avfan1.yaml
+
 Also update WiFi and MQTT server credentials as required.
 
 * Flash over USB or ethernet. To flash over USB use ESPhome Web Flasher https://web.esphome.io/
