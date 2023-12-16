@@ -159,7 +159,7 @@ J7	GND	+5/12V	IO39	IO32
 
 J8 	USB2.0 on USB-C (USB can be connected when when barrel connector power  but not advised).
 
-J9	+5/12V 	4amps Max. to board and fans. (5-14v range, needs to match devices on J4-J7)
+J9	+5/12V 	12 amps Max. to board and fans. (5-14v range, needs to match devices on J4-J7)
 
 
 P1 and P2  - Standard WEMOS D1 Expansion Header
