@@ -142,7 +142,8 @@ J2	+3.3V	IO27	GND
 J2	+3.3V	IO27	GND
 
 
-### PWM PC Style Headers: 	PIN3 - Fan Speed Input, 5V Tolerant, 1K Pullup Resistor
+### PWM PC Style Headers:
+			PIN3 - Fan Speed Input, 5V Tolerant, 1K Pullup Resistor
 			PIN4 - Fan PWM Output, 5V Drive
 			
 CONN	PIN1	PIN2	PIN3	PIN4
