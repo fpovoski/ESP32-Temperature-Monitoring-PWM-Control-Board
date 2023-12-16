@@ -32,8 +32,8 @@ sensors control each of the four PWM fan connectors.
 Flashed binary image  has "api:" disabled, MQTT enabled.
 
 * For customization, downlaod the example (flashed) code from 
-https://github.com/fpovoski/ESP32-Temperature-Monitoring-PWM-Control-Board
-(avfan1.yaml). Also update WiFi and MQTT server credentials as required.
+https://github.com/fpovoski/ESP32-Temperature-Monitoring-PWM-Control-Board/avfan1.yaml.
+Also update WiFi and MQTT server credentials as required.
 
 * Flash over USB or ethernet. To flash over USB use ESPhome Web Flasher https://web.esphome.io/
 with the device powered and connected to your host machine.
@@ -46,12 +46,17 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 ### Connector to GPIO Mapping.
 
 GPIO	PIN	CONNECTOR		Input	Output	Notes
+
 0	25			pulled up	OK	outputs PWM signal at boot,
 						 must be LOW to enter flashing mode
+       
 1	35	P2.1		TX pin	OK	debug output at boot
+
 2	24			OK	OK	connected to on-board LED, must be left
 						 floating or LOW to enter flashing mode
+       
 3	34	P2.2		OK	RX pin	HIGH at boot
+
 4	26			OK	OK	
 5	29	P1.7		OK	OK	outputs PWM signal at boot, strapping pin
 6	20			x	x	connected to the integrated SPI flash
