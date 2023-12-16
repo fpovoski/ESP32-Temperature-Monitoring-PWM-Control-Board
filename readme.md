@@ -20,7 +20,7 @@ A 3D printed enclosure is also available: https://www.tindie.com/products/29364/
 
 * DO NOT ATTEMPT TO POWER FANS FROM USB-C. Supplied power (5v-14V) to barrel connector
 needs to match the voltage of the PWM fan (or other device) you are driving. Board has an onboard
-self-resetting flex fuse rated at 4 amps.
+self-resetting flex fuse rated at 12 amps.
 
 * To place on WiFi network use 2.4G phone to connect to "AVFAN1 Fallback Hotspot" and
 update SSID and PASSWORD. Once connected to your WiFi network, to access the webpage of
