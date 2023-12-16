@@ -58,60 +58,107 @@ GPIO	PIN	CONNECTOR		Input	Output	Notes
        
 3	34	P2.2		OK	RX pin	HIGH at boot
 
-4	26			OK	OK	
+4	26			OK	OK
+
 5	29	P1.7		OK	OK	outputs PWM signal at boot, strapping pin
+
 6	20			x	x	connected to the integrated SPI flash
+
 7	21			x	x	connected to the integrated SPI flash
+
 8	22			x	x	connected to the integrated SPI flash
+
 9	17			x	x	connected to the integrated SPI flash
+
 10	18			x	x	connected to the integrated SPI flash
+
 11	19			x	x	connected to the integrated SPI flash
+
 12	14			OK	OK	boot fails if pulled high, strapping pin
-13	16	PWM1-(J4)	OK	OK	
+
+13	16	PWM1-(J4)	OK	OK
+
 14	13	PWM2-(J5)	OK	OK	outputs PWM signal at boot
+
 15	23			OK	OK	outputs PWM signal at boot, strapping pin
-16	27	P2.6		OK	OK	
-17	28	P2.5		OK	OK	
-18	30	P1.4		OK	OK	
+
+16	27	P2.6		OK	OK
+
+17	28	P2.5		OK	OK
+
+18	30	P1.4		OK	OK
+
 19	31	P1.5		OK	OK
-20	
-21	33	P2.4		OK	OK	
-22	36	P2.3		OK	OK	
+
+20
+
+21	33	P2.4		OK	OK
+
+22	36	P2.3		OK	OK
+
 23	37	P1.6		OK	OK
-24	
-25	10	PWM3-(J6)	OK	OK	
-26	11	P1.3		OK	OK	
-27	12	1WIRE		OK	OK	
-32	8	PWM4-(J7)	OK	OK	
-33	9	RPM1-(J4)	OK	OK	
+24
+
+25	10	PWM3-(J6)	OK	OK
+
+26	11	P1.3		OK	OK
+
+27	12	1WIRE		OK	OK
+
+32	8	PWM4-(J7)	OK	OK
+
+33	9	RPM1-(J4)	OK	OK
+
 34	6	RPM2-(J5)	OK		input only
+
 35	7	RPM3-(J6)	OK		input only
+
 36	4	P1.2		OK		input only
+
 39	5	RPM4-(J7)	OK		input only
+
 EN	3	P1.1
+
 3.3	2	P1.8
+
 GND	1	P2.7
+
 GND	15
+
 GND	38
+
 NC	32
+
 +5		P2.8
 
-Dallas One-wire Connectors
+
+### Dallas One-wire Connectors
 CONN	PIN1	PIN2	PIN3
+
 J1	+3.3V	IO27	GND
-J2	+3.3V	IO27	GND
+
 J2	+3.3V	IO27	GND
 
-PWM PC Style Headers: 	PIN3 - Fan Speed Input, 5V Tolerant, 1K Pullup Resistor
+J2	+3.3V	IO27	GND
+
+
+### PWM PC Style Headers: 	PIN3 - Fan Speed Input, 5V Tolerant, 1K Pullup Resistor
 			PIN4 - Fan PWM Output, 5V Drive
 			
 CONN	PIN1	PIN2	PIN3	PIN4
+
 J4	GND	+5/12V	IO33	IO13
+
 J5	GND	+5/12V	IO34	IO14
+
 J6	GND	+5/12V	IO35	IO25
+
 J7	GND	+5/12V	IO39	IO32
 
+
 J8 	USB2.0 on USB-C (USB can be connected when when barrel connector power  but not advised).
+
 J9	+5/12V 	4amps Max. to board and fans. (5-14v range, needs to match devices on J4-J7)
+
 
 P1 and P2  - Standard WEMOS D1 Expansion Header
