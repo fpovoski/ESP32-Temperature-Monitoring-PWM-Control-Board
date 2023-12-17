@@ -48,92 +48,6 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 
 <img src="work/Fan_Control_Board.0.8.B_rot.png" width=400>
 
-GPIO	PIN	CONNECTOR		Input	Output	Notes
-
-0	25			pulled up	OK	outputs PWM signal at boot,
-						 must be LOW to enter flashing mode
-       
-1	35	P2.1		TX pin	OK	debug output at boot
-
-2	24			OK	OK	connected to on-board LED, must be left
-						 floating or LOW to enter flashing mode
-       
-3	34	P2.2		OK	RX pin	HIGH at boot
-
-4	26			OK	OK
-
-5	29	P1.7		OK	OK	outputs PWM signal at boot, strapping pin
-
-6	20			x	x	connected to the integrated SPI flash
-
-7	21			x	x	connected to the integrated SPI flash
-
-8	22			x	x	connected to the integrated SPI flash
-
-9	17			x	x	connected to the integrated SPI flash
-
-10	18			x	x	connected to the integrated SPI flash
-
-11	19			x	x	connected to the integrated SPI flash
-
-12	14			OK	OK	boot fails if pulled high, strapping pin
-
-13	16	PWM1-(J4)	OK	OK
-
-14	13	PWM2-(J5)	OK	OK	outputs PWM signal at boot
-
-15	23			OK	OK	outputs PWM signal at boot, strapping pin
-
-16	27	P2.6		OK	OK
-
-17	28	P2.5		OK	OK
-
-18	30	P1.4		OK	OK
-
-19	31	P1.5		OK	OK
-
-20
-
-21	33	P2.4		OK	OK
-
-22	36	P2.3		OK	OK
-
-23	37	P1.6		OK	OK
-24
-
-25	10	PWM3-(J6)	OK	OK
-
-26	11	P1.3		OK	OK
-
-27	12	1WIRE		OK	OK
-
-32	8	PWM4-(J7)	OK	OK
-
-33	9	RPM1-(J4)	OK	OK
-
-34	6	RPM2-(J5)	OK		input only
-
-35	7	RPM3-(J6)	OK		input only
-
-36	4	P1.2		OK		input only
-
-39	5	RPM4-(J7)	OK		input only
-
-EN	3	P1.1
-
-3.3	2	P1.8
-
-GND	1	P2.7
-
-GND	15
-
-GND	38
-
-NC	32
-
-+5		P2.8
-
-
 ### Dallas One-wire Screw Terminal Connectors J1-J3
 | CONNECTOR | PIN1 | PIN2 | PIN3 |
 | --------- | ---- | ---- | ---- |
@@ -156,9 +70,13 @@ NC	32
 | J6 | GND | PWR | IO35 | IO25 |
 | J7 | GND | PWR | IO39 | IO32 |
 
+### USB-C Connector J8
+- USB 2.0, 5V, 2amps.
+
 ### Power Jack Connector J9
 - +5-14V 12 amps max.
 - Directly supplies J4-J7 PWR
+- Must match your Fan or LED voltage.
 
 | CONNECTOR | Center | Perimeter |
 | --------- | ---- | ---- |
@@ -187,11 +105,4 @@ NC	32
 | --------- | ---- | ---- | ---- |
 | J11 | +5V | J10.1 | +3.3V |
   
-
-### Other Connectors
-J8 	USB2.0 on USB-C (USB can be connected when when barrel connector power but not advised).
-
-J9	+5/12V 	12 amps Max. to board and fans. (5-14v range, needs to match devices on J4-J7)
-
-
-P1 and P2  - Standard WEMOS D1 Expansion Header
+### WeMos D1 Mini Plugs 
