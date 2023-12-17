@@ -145,8 +145,8 @@ J2	+3.3V	IO27	GND
 
 
 ### PWM PC Style Headers
-			PIN3 - Fan Speed Input, 5V Tolerant, 1K Pullup Resistor
-			PIN4 - Fan PWM Output, 5V Drive
+PIN3 - Fan Speed Input, 5V Tolerant, 1K Pullup Resistor
+PIN4 - Fan PWM Output, 5V Drive
 			
 CONN	PIN1	PIN2	PIN3	PIN4
 
@@ -159,7 +159,7 @@ J6	GND	+5/12V	IO35	IO25
 J7	GND	+5/12V	IO39	IO32
 
 
-J8 	USB2.0 on USB-C (USB can be connected when when barrel connector power  but not advised).
+J8 	USB2.0 on USB-C (USB can be connected when when barrel connector power but not advised).
 
 J9	+5/12V 	12 amps Max. to board and fans. (5-14v range, needs to match devices on J4-J7)
 
