@@ -156,6 +156,14 @@ NC	32
 | J6 | GND | PWR | IO35 | IO25 |
 | J7 | GND | PWR | IO39 | IO32 |
 
+### JST SH Connector
+- Direct Interface for STEMMA and QWIIC boards typically using I2C.
+- PWR - Either +3.3V or +5.0V selectable by jumper J11.
+| CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
+| --------- | ---- | ---- | ---- | ---- |
+| J10 | GND | PWR | IO21 | IO22 |
+  
+
 ### Other Connectors
 J8 	USB2.0 on USB-C (USB can be connected when when barrel connector power but not advised).
 
