@@ -156,6 +156,7 @@ NC	32
 | J6 | GND | PWR | IO35 | IO25 |
 | J7 | GND | PWR | IO39 | IO32 |
 
+
 ### JST SH Connector
 - Direct Interface for STEMMA and QWIIC boards typically using I2C.
 - PWR - Either +3.3V or +5.0V selectable by jumper J11.
