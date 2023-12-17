@@ -135,13 +135,11 @@ NC	32
 
 
 ### Dallas One-wire Connectors
-CONN	PIN1	PIN2	PIN3
-
-J1	+3.3V	IO27	GND
-
-J2	+3.3V	IO27	GND
-
-J2	+3.3V	IO27	GND
+| CONNECTOR | PIN1 | PIN2 | PIN3 |
+| --------- | ---- | ---- | ---- |
+| J1 | +3.3V | IO27 | GND |
+| J2 | +3.3V | IO27 | GND |
+| J3 | +3.3V | IO27 | GND |
 
 
 ### PWM PC Style Headers
