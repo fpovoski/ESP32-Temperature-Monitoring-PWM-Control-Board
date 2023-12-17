@@ -159,7 +159,9 @@ NC	32
 
 ### I2C JST SH Connector
 - Direct Interface for STEMMA and QWIIC boards typically using I2C.
+
 - Available for other functions than I2C
+
 - PWR - Either +3.3V or +5.0V selectable by jumper J11.
 
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
