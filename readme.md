@@ -80,8 +80,6 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 | --------- | ---- | ---- |
 | J9 | GND | +5-14V | GND |
 
-
-
 ### I2C JST SH Connector J10
 - Direct Interface for STEMMA and QWIIC boards typically using I2C.
 - Available for other functions than I2C.
@@ -92,7 +90,6 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 | J10 | GND | PWR | IO21 | IO22 |
 
 ### Power Selection J11
-- 1.27MM Pitch.
 - Voltage level selection for J10.
 - Jumper Pin 1 and 2: +5V
 - Jumber Pin 3 and 2: +3.3V
