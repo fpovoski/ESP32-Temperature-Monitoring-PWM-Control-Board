@@ -57,8 +57,8 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 
 
 ### PWM Fan/LED KK Style Connectors J4-J7
-- PIN3 - Input 5V Tolerant with 1K Pullup Resistor
-- PIN4 - Output 5V Drive.
+- PIN3 - Input 5V tolerant with 1K pullup resistor
+- PIN4 - Output 5V drive.
 - PWR - Matches input voltage on J9. Rated to 7 amps.
 			
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
@@ -74,7 +74,7 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 ### Power Jack Connector J9
 - +5-14V 12 amps max.
 - Directly supplies J4-J7 PWR
-- Must match your Fan or LED voltage.
+- Must match your fan or LED voltage.
 
 | CONNECTOR | Center | Perimeter |
 | --------- | ---- | ---- |
