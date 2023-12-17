@@ -58,9 +58,7 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 
 ### PWM Fan/LED KK Style Connectors J4-J7
 - PIN3 - Input 5V Tolerant with 1K Pullup Resistor
-
 - PIN4 - Output 5V Drive.
-
 - PWR - Matches input voltage on J9. Rated to 7 amps.
 			
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
@@ -86,9 +84,7 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 
 ### I2C JST SH Connector J10
 - Direct Interface for STEMMA and QWIIC boards typically using I2C.
-
 - Available for other functions than I2C.
-
 - PWR - Either +3.3V or +5.0V selectable by J11.
 
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
