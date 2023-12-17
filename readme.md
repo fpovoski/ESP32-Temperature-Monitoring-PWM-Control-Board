@@ -46,6 +46,8 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 
 ### Connector to GPIO Mapping.
 
+<img src="work/Fan_Control_Board.0.8.B_rot.png" width=400>
+
 GPIO	PIN	CONNECTOR		Input	Output	Notes
 
 0	25			pulled up	OK	outputs PWM signal at boot,
