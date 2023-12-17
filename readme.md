@@ -12,7 +12,7 @@ ESP32 based board for temperature monitoring/PWM fan control/addressable LED con
 * I/O: Three screw down three position headers with common one-wire interface as well as 3.3v power and ground.
 * I/O: USB 2.0 via USB-C connector using the CP2102N.
 * I/O: Standard WEMOS daughter interface on two 1x8 pin headers.
-* I/O: JST SH conn w/ I2C interface 3.3v/5.0v selectable power (compatible with Adafruit's STEMMA QT/ Sparkfun Qwiic sensors).
+* I/O: JST SH connector w/ I2C/PDM interface 3.3v/5.0v selectable power (compatible with Adafruit's STEMMA QT/ Sparkfun Qwiic sensors).
 
 A 3D printed enclosure is also available: https://www.tindie.com/products/29364/
 
@@ -80,9 +80,9 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 | --------- | ---- | ---- |
 | J9 | GND | +5-14V | GND |
 
-### I2C JST SH Connector J10
-- Direct Interface for STEMMA and QWIIC boards typically using I2C.
-- Available for other functions than I2C.
+### I2C/PDM JST SH Connector J10
+- Direct Interface for STEMMA and QWIIC boards typically using I2C or PDM.
+- Available for other functions than I2C or PDM.
 - PWR - Either +3.3V or +5.0V selectable by J11.
 
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
