@@ -105,4 +105,10 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 | --------- | ---- | ---- | ---- |
 | J11 | +5V | J10.1 | +3.3V |
   
-### WeMos D1 Mini Plugs 
+### WeMos D1 Mini Plug P1 and P2
+
+| CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 | PIN5 | PIN6 | PIN7 | PIN8 |
+| --------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
+| P1 | +5V | GND | IO16 | IO17 | IO21 | IO22 | RXD/IO03 | TXD/IO01 |
+| P2 | +3.3V | IO05 | IO23| IO19 | IO18 | IO26 | IO36 | EN |
+
