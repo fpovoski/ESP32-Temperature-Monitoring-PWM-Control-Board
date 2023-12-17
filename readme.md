@@ -87,7 +87,7 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
 | --------- | ---- | ---- | ---- | ---- |
-| J10 | GND | PWR | IO21 | IO22 |
+| J10 | GND | PWR | IO21/SDA | IO22/SCL |
 
 ### Power Selection J11
 - Voltage level selection for J10.
