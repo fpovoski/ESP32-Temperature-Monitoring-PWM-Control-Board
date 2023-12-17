@@ -156,13 +156,22 @@ NC	32
 | J6 | GND | PWR | IO35 | IO25 |
 | J7 | GND | PWR | IO39 | IO32 |
 
+### Power Jack Connector J9
+- +5-14V 12 amps max.
+- Directly supplies J4-J7 PWR
+
+| CONNECTOR | Center | Perimeter |
+| --------- | ---- | ---- |
+| J9 | GND | +5-14V | GND |
+
+
 
 ### I2C JST SH Connector J10
 - Direct Interface for STEMMA and QWIIC boards typically using I2C.
 
-- Available for other functions than I2C
+- Available for other functions than I2C.
 
-- PWR - Either +3.3V or +5.0V selectable by jumper J11.
+- PWR - Either +3.3V or +5.0V selectable by J11.
 
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
 | --------- | ---- | ---- | ---- | ---- |
@@ -171,8 +180,8 @@ NC	32
 ### Power Selection J11
 - 1.27MM Pitch.
 - Voltage level selection for J10.
-- Jumper Pin 1 and 2 - +5V
-- Jumber Pin 3 and 2 - +3.3V
+- Jumper Pin 1 and 2: +5V
+- Jumber Pin 3 and 2: +3.3V
 
 | CONNECTOR | PIN1 | PIN2 | PIN3 |
 | --------- | ---- | ---- | ---- |
