@@ -134,7 +134,7 @@ NC	32
 +5		P2.8
 
 
-### Dallas One-wire Connectors
+### Dallas One-wire Screw Terminal Connectors J1-J3
 | CONNECTOR | PIN1 | PIN2 | PIN3 |
 | --------- | ---- | ---- | ---- |
 | J1 | +3.3V | IO27 | GND |
@@ -142,7 +142,7 @@ NC	32
 | J3 | +3.3V | IO27 | GND |
 
 
-### PWM PC Style Headers
+### PWM Fan/LED KK Style Connectors J4-J7
 - PIN3 - Fan Speed Input, 5V Tolerant, 1K Pullup Resistor
 
 - PIN4 - Fan PWM Output, 5V Drive
@@ -157,8 +157,9 @@ NC	32
 | J7 | GND | PWR | IO39 | IO32 |
 
 
-### JST SH Connector
+### I2C JST SH Connector
 - Direct Interface for STEMMA and QWIIC boards typically using I2C.
+- Available for other functions than I2C
 - PWR - Either +3.3V or +5.0V selectable by jumper J11.
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
 | --------- | ---- | ---- | ---- | ---- |
