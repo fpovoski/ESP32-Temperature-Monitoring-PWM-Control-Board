@@ -157,7 +157,7 @@ NC	32
 | J7 | GND | PWR | IO39 | IO32 |
 
 
-### I2C JST SH Connector
+### I2C JST SH Connector J10
 - Direct Interface for STEMMA and QWIIC boards typically using I2C.
 
 - Available for other functions than I2C
@@ -167,6 +167,16 @@ NC	32
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
 | --------- | ---- | ---- | ---- | ---- |
 | J10 | GND | PWR | IO21 | IO22 |
+
+### Power Selection J11
+- 1.27MM Pitch.
+- Voltage level selection for J10.
+- Jumper Pin 1 and 2 - +5V
+- Jumber Pin 3 and 2 - +3.3V
+
+| CONNECTOR | PIN1 | PIN2 | PIN3 |
+| --------- | ---- | ---- | ---- |
+| J11 | +5V | J10.1 | +3.3V |
   
 
 ### Other Connectors
