@@ -44,7 +44,7 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 
 * For adding Wemos style boards (i.e., relay) with the case installed  use the long (19mm) provided pins.
 
-### Connector to GPIO Mapping.
+## Connector to GPIO Mapping.
 
 <img src="work/Fan_Control_Board.0.8.B_rot.png" width=400>
 
