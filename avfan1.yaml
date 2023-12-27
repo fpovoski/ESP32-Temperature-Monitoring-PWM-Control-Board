@@ -94,7 +94,7 @@ debug:
   update_interval: 5s
 
 logger:
-  level: Error
+  level: DEBUG
 
 globals:
   - id: fan1_sum
