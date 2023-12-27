@@ -1,14 +1,19 @@
- 12VESP32 Temperature Monitoring PWM Control Board, Part No. FB6261
+ESP32 Temperature Monitoring PWM Control Board, Part No. FB6261
+
+For email support: esp32andmore@gmail.com. For telephone support: 1.585.310.1770
 
 * DO NOT ATTEMPT TO POWER FANS FROM USB-C. Supplied power (5v-14V) to barrel connector
 needs to match the voltage of the PWM fan (or other device) you are driving. Board has an onboard
-self-resetting flex fuse rated at 4 amps.
+self-resetting flex fuse rated at 12 amps.
 
-* Device is flashed with an exmaple ESPhome image that has manual control over fans 
-and enabled automatic control based the desired temperature setting. To place on 
-WiFi network use 2.4G phone to connect to "AVFAN1 Fallback Hotspot" and
+* To place on WiFi network use 2.4G phone to connect to "AVFAN1 Fallback Hotspot" and
 update SSID and PASSWORD. Once connected to your WiFi network, to access the webpage of
 the device browse to http://avfan1.local
+
+* Device is flashed with an exmaple ESPhome binary image that has manual control over fans 
+and automatic control which can be enabled based the target temperature setting.  Four temperature
+sensors control each of the four PWM fan connectors.
+Flashed binary image  has "api:" disabled, MQTT enabled.
 
 * For customization, downlaod the example (flashed) code from 
 https://github.com/fpovoski/ESP32-Temperature-Monitoring-PWM-Control-Board
@@ -21,6 +26,8 @@ with the device powered and connected to your host machine.
 the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 
 * For adding Wemos style boards (i.e., relay) with the case installed  use the long (19mm) provided pins.
+
+* For voltage selection of JST SH connector (J10)  use J11 (+5V - J11.1 to J11.2, +3.3V - J11.3 to J11.2)
 
 Connector to GPIO Mapping.
 
@@ -35,7 +42,7 @@ GPIO	PIN	CONNECTOR		Input	Output	Notes
 5	29	P1.7		OK	OK	outputs PWM signal at boot, strapping pin
 6	20			x	x	connected to the integrated SPI flash
 7	21			x	x	connected to the integrated SPI flash
-8	22			x	x	connected to the integrated SPI flash
+8	22	 		x	x	connected to the integrated SPI flash
 9	17			x	x	connected to the integrated SPI flash
 10	18			x	x	connected to the integrated SPI flash
 11	19			x	x	connected to the integrated SPI flash
@@ -48,8 +55,8 @@ GPIO	PIN	CONNECTOR		Input	Output	Notes
 18	30	P1.4		OK	OK	
 19	31	P1.5		OK	OK
 20	
-21	33	P2.4		OK	OK	
-22	36	P2.3		OK	OK	
+21	33	P2.4, SDA-(J10)	OK	OK	
+22	36	P2.3, SCL-(J10)	OK	OK	
 23	37	P1.6		OK	OK
 24	
 25	10	PWM3-(J6)	OK	OK	
@@ -76,16 +83,23 @@ J2	+3.3V	IO27	GND
 J2	+3.3V	IO27	GND
 
 PWM PC Style Headers: 	PIN3 - Fan Speed Input, 5V Tolerant, 1K Pullup Resistor
-			PIN4 - Fan PWM Output, 5V Drive
-			
+			PIN4 - Fan PWM Output, 5V Drive			
 CONN	PIN1	PIN2	PIN3	PIN4
 J4	GND	+5/12V	IO33	IO13
 J5	GND	+5/12V	IO34	IO14
 J6	GND	+5/12V	IO35	IO25
 J7	GND	+5/12V	IO39	IO32
 
+JST SH (STEMMA QT/QWIIC)*
+CONN	PIN1	PIN2	PIN3	PIN4
+J10	GND	+3.3/5V	IO21	IO22
+
+*1.27MM JUMPER HEADER	PIN1-2 -> +5V, PIN3-2 -> +3.3V
+CONN	PIN1	PIN2	PIN3
+J11	+5V	GND	+3.3V
+
 J8 	USB2.0 on USB-C (USB can be connected when when barrel connector power  but not advised).
-J9	+5/12V 	4amps Max. to board and fans. (5-14v range, needs to match devices on J4-J7)
+J9	+5/12V 	12amps Max. to board and fans. (5-14v range, needs to match devices on J4-J7)
 
 P1 and P2  - Standard WEMOS D1 Expansion Header
 
