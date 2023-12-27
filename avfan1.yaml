@@ -1,0 +1,508 @@
+
+# Four automatically controlled PWM fan outputs (J4-J7), each set by four target temperatures, maintained by four Dallas sensor's temperatures. MQTT enabled. Home Assistant API disabled. DHCP enabled.
+# Other control configurations available with modification of Dallas platform LAMBDA function. Contact us at esp32andmore@gmail.com for no cost customization.
+substitutions:
+  devicename: avfan1
+  fdevicename: AVfan1
+  ip: 192.168.0.178 # For static IP adressing
+
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  alarm_temp: "50" # Threshold for alarm when implemented
+  ptemp: "20"
+  itemp: "0.1"
+
+# Connect your Dallas sensors with logger: DEBUG enabled (factory flash default).
+# Open the ESPHome webtool, connect to the ECB board, view the "Logs" window, hit "Reset",
+# and search for Dallas scan addresses and replace the below addresses with your unique ones.
+# Example Scan
+#[18:16:42][D][dallas.sensor:084]:     0x8b3ca8f64935b228 4
+#[18:16:42][D][dallas.sensor:084]:     0x783c0af6490d3628 2
+#[18:16:42][D][dallas.sensor:084]:     0xc13c01f09642c928 1
+#[18:16:42][D][dallas.sensor:084]:     0x043c6ef649772f28 3
+  dallasaddress1: "0xc13c01f09642c928"
+  dallasaddress2: "0x783c0af6490d3628"
+  dallasaddress3: "0x043c6ef649772f28"
+  dallasaddress4: "0x8b3ca8f64935b228"
+
+
+esphome:
+  name: ${devicename}
+  friendly_name: ${fdevicename}
+
+  on_boot:
+  - priority: 900.0
+    then:
+      - lambda: |-
+          id(cpu_speed) = ESP.getCpuFreqMHz();
+
+esp32:
+  board: wemos_d1_mini32
+  framework:
+    type: arduino
+
+preferences:
+  flash_write_interval: 10min
+
+#api:
+#  encryption:
+#    key: "itqzvhZMJj8wuTJX0GTOuL/ffESFROzUlmcO0u2+sfo="  #use your own HA generated Key
+    
+wifi:
+  ssid: ${ssid}
+  password: ${password}
+  #fast_connect: true
+  #example static IP settings
+  #manual_ip:
+    #static_ip: ${ip}
+    #gateway: 192.168.0.1
+    #subnet: 255.255.255.0
+    #dns1: 192.168.0.1
+    #dns2: 8.8.8.8
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${fdevicename} Fallback Hotspot
+    password: ${password}
+    manual_ip:
+      static_ip: 192.168.100.2
+      gateway: 192.168.100.1
+      subnet: 255.255.255.0
+      dns1: 192.168.0.1
+      dns2: 8.8.8.8
+    
+captive_portal:
+
+ota:
+  password: ${password}
+# Replace with your Wifi credentials here
+
+mqtt:
+  broker: 192.168.0.100   # use your own MQTT server address and credentials
+#  username: "john"
+#  password: "trek6666"
+  
+web_server:
+  port: 80
+
+time:
+  - platform: sntp
+    id: current_time
+
+debug:
+  update_interval: 5s
+
+logger:
+  level: Error
+
+globals:
+  - id: fan1_sum
+    type: float
+    restore_value: no
+    initial_value: '0'
+  - id: fan2_sum
+    type: float
+    restore_value: no
+    initial_value: '0'
+  - id: fan3_sum
+    type: float
+    restore_value: no
+    initial_value: '0'
+  - id: fan4_sum
+    type: float
+    restore_value: no
+    initial_value: '0'
+  - id: target1
+    type: int
+    restore_value: True
+    initial_value: '26'
+  - id: target2
+    type: int
+    restore_value: True
+    initial_value: '26'
+  - id: target3
+    type: int
+    restore_value: True
+    initial_value: '26'
+  - id: target4
+    type: int
+    restore_value: True
+    initial_value: '26'
+  - id: cpu_speed
+    type: int
+    restore_value: no
+    initial_value: "0"
+
+number:
+  - platform: template
+    id: set_target_temp_1
+    name: ${fdevicename} Target Temp 1
+    optimistic: True
+    min_value: 15
+    max_value: 50
+    initial_value: '26'
+    step: 1
+    restore_value: True
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+    command_topic: ${devicename}/number/${devicename}_target_temp_1/command
+
+  - platform: template
+    id: set_target_temp_2
+    name: ${fdevicename} Target Temp 2
+    optimistic: True
+    min_value: 15
+    max_value: 50
+    initial_value: '26'
+    step: 1
+    restore_value: true
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+    command_topic: ${devicename}/number/${devicename}_target_temp_2/command
+
+  - platform: template
+    id: set_target_temp_3
+    name: ${fdevicename} Target Temp 3
+    optimistic: True
+    min_value: 15
+    max_value: 50
+    initial_value: '26'
+    step: 1
+    restore_value: true
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+    command_topic: ${devicename}/number/${devicename}_target_temp_3/command
+    
+  - platform: template
+    id: set_target_temp_4
+    name: ${fdevicename} Target Temp 4
+    optimistic: True
+    min_value: 15
+    max_value: 50
+    initial_value: '26'
+    step: 1
+    restore_value: true
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+    command_topic: ${devicename}/number/${devicename}_target_temp_4/command
+  
+switch:
+  - platform: restart
+    name: "AVfan1 Restart"
+
+#  - platform: gpio
+#    name: "AVfan1 Relay 0"
+#    pin: GPIO22
+#    id: AVfan1_Relay_0
+#    restore_mode: restore_default_off
+
+  - platform: template
+    id: auto_fan1
+    name: ${fdevicename} Fan1 Auto Mode
+    restore_mode: RESTORE_DEFAULT_ON
+    optimistic: true      
+    turn_off_action:
+      - fan.turn_off : fan1_speed
+
+  - platform: template
+    id: auto_fan2
+    name: ${fdevicename} Fan2 Auto Mode
+    restore_mode: RESTORE_DEFAULT_ON
+    optimistic: true    
+    turn_off_action:
+      - fan.turn_off : fan2_speed
+
+  - platform: template
+    id: auto_fan3
+    name: ${fdevicename} Fan3 Auto Mode
+    restore_mode: RESTORE_DEFAULT_ON
+    optimistic: true  
+    turn_off_action:
+      - fan.turn_off : fan3_speed
+
+  - platform: template
+    id: auto_fan4
+    name: ${fdevicename} Fan4 Auto Mode
+    restore_mode: RESTORE_DEFAULT_ON
+    optimistic: True  
+    turn_off_action:
+      - fan.turn_off : fan4_speed
+  
+dallas:
+  - pin: GPIO27
+    update_interval: 5s
+  
+output:
+  - platform: ledc
+    pin: GPIO13
+    id: fan1
+    frequency: 25600Hz
+    
+  - platform: ledc
+    pin: GPIO14
+    id: fan2
+    frequency: 25600Hz
+    
+  - platform: ledc
+    pin: GPIO25
+    id: fan3
+    frequency: 25600Hz
+    
+  - platform: ledc
+    pin: GPIO32
+    id: fan4
+    frequency: 25600Hz
+
+ 
+light:
+  # On-Board LED
+  - platform: status_led
+    name: ${fdevicename} Status Light
+    id: status_light
+    pin:
+      number: GPIO2
+      ignore_strapping_warning: True
+
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  id: bus_a
+
+sensor:
+#  - platform: aht10
+#    temperature:
+#      name: "AVfan1 Room Temperature"
+#    humidity:
+#      name: "AVfan1 Room Humidity"
+#    update_interval: 5s
+
+  - platform: pulse_counter
+    pin: GPIO33
+    unit_of_measurement: 'rpm'
+    name: ${fdevicename} Mon 1
+    update_interval: 5s
+    filters:
+      - multiply: 0.5
+
+  - platform: pulse_counter
+    pin: GPIO34
+    unit_of_measurement: 'rpm'
+    name: ${fdevicename} Mon 2
+    update_interval: 5s
+    filters:
+      - multiply: 0.5
+
+  - platform: pulse_counter
+    pin: GPIO35
+    unit_of_measurement: 'rpm'
+    name: ${fdevicename} Mon 3
+    update_interval: 5s
+    filters:
+      - multiply: 0.5
+
+  - platform: pulse_counter
+    pin: GPIO39
+    unit_of_measurement: 'rpm'
+    name: ${fdevicename} Mon 4
+    update_interval: 5s
+    filters:
+      - multiply: 0.5       
+        
+  - platform: wifi_signal
+    name: ${fdevicename} WiFi
+    update_interval: 30s
+  
+  - platform: uptime
+    name: ${fdevicename} Uptime
+    update_interval: 30s
+
+  - platform: template
+    name: ${fdevicename} CPU Speed
+    accuracy_decimals: 0
+    unit_of_measurement: Mhz
+    lambda: |-
+      return (id(cpu_speed));
+    entity_category: "diagnostic"
+
+  - platform: template
+    id: sys_esp_temperature
+    name: ${fdevicename} ESP Temperature
+    lambda: return temperatureRead();
+    unit_of_measurement: °C
+    device_class: TEMPERATURE
+    update_interval: 30s
+
+  - platform: dallas
+    address: ${dallasaddress1}
+    id: temp1
+    filters:
+      - filter_out: NaN
+      - offset: 0.0
+      #- lambda: return x * (9.0/5.0) + 32.0;
+    unit_of_measurement: "°C"
+    name: ${fdevicename} Temperature 1
+    on_value: 
+      # example using GLOBAL to maintain persistant SUM for each fan
+      - lambda: !lambda |
+           if (id(auto_fan1).state) {
+             float fan_actual_temp =  id(temp1).state;
+             float fan_desired_temp = id(set_target_temp_1).state;
+             float diff = fan_actual_temp - fan_desired_temp;
+             id(fan1_sum) =id(fan1_sum) + diff;
+             float fan_pdiff=diff * $ptemp;
+             float fan_idiff= id(fan1_sum) * $itemp;
+             float fan_set_speed = fan_pdiff + fan_idiff;
+             if (fan_set_speed >100) fan_set_speed =100;
+             if (fan_set_speed <10) fan_set_speed=1;
+             if (id(fan1_sum) >100) id(fan1_sum) = 100;
+             if (id(fan1_sum) < -100) id(fan1_sum) = -100;
+             auto call = id(fan1_speed).turn_on();
+             call.set_speed(fan_set_speed);
+             call.perform();
+           }
+
+  - platform: dallas
+    address: ${dallasaddress2}
+    id: temp2
+    filters:
+      - filter_out: NaN
+      - offset: 0.0    #Calibration
+    unit_of_measurement: "°C"
+    name: ${fdevicename} Temperature 2
+    on_value: 
+      - lambda: !lambda |
+           if (id(auto_fan2).state) {
+             float fan_actual_temp =  id(temp2).state;
+             float fan_desired_temp = id(set_target_temp_2).state;
+             float diff = fan_actual_temp - fan_desired_temp;
+             id(fan2_sum) =id(fan2_sum) + diff;
+             float fan_pdiff=diff * $ptemp;
+             float fan_idiff= id(fan2_sum) * $itemp;
+             float fan_set_speed = fan_pdiff + fan_idiff;
+             if (fan_set_speed >100) fan_set_speed =100;
+             if (fan_set_speed <10) fan_set_speed=1;
+             if (id(fan2_sum) >100) id(fan2_sum) = 100;
+             if (id(fan2_sum) < -100) id(fan2_sum) = -100;
+             auto call = id(fan2_speed).turn_on();
+             call.set_speed(fan_set_speed);
+             call.perform();
+           }
+
+  - platform: dallas
+    address: ${dallasaddress3}
+    id: temp3
+    filters:
+      - filter_out: NaN
+      - offset: 0.0   #Calibration
+    unit_of_measurement: "°C"
+    name: ${fdevicename} Temperature 3
+    on_value:
+      - lambda: !lambda |
+           if (id(auto_fan3).state) {
+             float fan_actual_temp =  id(temp3).state;
+             float fan_desired_temp = id(set_target_temp_3).state;
+             float diff = fan_actual_temp - fan_desired_temp;
+             id(fan3_sum) =id(fan3_sum) + diff;
+             float fan_pdiff=diff * $ptemp;
+             float fan_idiff= id(fan3_sum) * $itemp;
+             float fan_set_speed = fan_pdiff + fan_idiff;
+             if (fan_set_speed >100) fan_set_speed =100;
+             if (fan_set_speed <10) fan_set_speed=1;
+             if (id(fan3_sum) >100) id(fan3_sum) = 100;
+             if (id(fan3_sum) < -100) id(fan3_sum) = -100;
+             auto call = id(fan3_speed).turn_on();
+             call.set_speed(fan_set_speed);
+             call.perform();
+           }
+
+  - platform: dallas
+    address: ${dallasaddress4}
+    id: temp4
+    filters:
+      - filter_out: NaN
+      - offset: 0.0   #Calibration
+    unit_of_measurement: "°C"
+    name: ${fdevicename} Temperature 4
+    on_value:
+      - lambda: !lambda |
+           if (id(auto_fan4).state) {
+             float fan_actual_temp =  id(temp4).state;
+             float fan_desired_temp = id(set_target_temp_4).state;
+             float diff = fan_actual_temp - fan_desired_temp;
+             id(fan4_sum) =id(fan4_sum) + diff;
+             float fan_pdiff=diff * $ptemp;
+             float fan_idiff= id(fan4_sum) * $itemp;
+             float fan_set_speed = fan_pdiff + fan_idiff;
+             if (fan_set_speed >100) fan_set_speed =100;
+             if (fan_set_speed <10) fan_set_speed=1;
+             if (id(fan4_sum) >100) id(fan4_sum) = 100;
+             if (id(fan4_sum) < -100) id(fan4_sum) = -100;
+             auto call = id(fan4_speed).turn_on();
+             call.set_speed(fan_set_speed);
+             call.perform();
+           }
+
+  - platform: debug
+    free:
+      name: ${fdevicename} Heap Free
+    block:
+      name: ${fdevicename} Heap Max Block
+    loop_time:
+      name: ${fdevicename} Loop Time
+
+
+fan:
+  - platform: speed
+    output: fan1
+    id: fan1_speed
+    name: ${fdevicename} Fan1 Speed
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: speed
+    output: fan2
+    id: fan2_speed
+    name: ${fdevicename} Fan2 Speed
+    restore_mode: RESTORE_DEFAULT_OFF
+          
+  - platform: speed
+    output: fan3
+    id: fan3_speed
+    name: ${fdevicename} Fan3 Speed
+    restore_mode: RESTORE_DEFAULT_OFF
+ 
+  - platform: speed
+    output: fan4
+    id: fan4_speed
+    name: ${fdevicename} Fan4 Speed
+    restore_mode: RESTORE_DEFAULT_OFF
+
+text_sensor:
+  - platform: template
+    name: ${fdevicename} Device Sensor
+    lambda: |-
+      return {"ESP32 Control Board"};
+
+  - platform: version
+    name: ${fdevicename} Version
+
+  - platform: wifi_info
+    ip_address:
+      name: ${fdevicename} IP Address
+    ssid:
+      name: ${fdevicename} Connected SSID
+    bssid:
+      name: ${fdevicename} Connected BSSID
+    mac_address:
+      name: ${fdevicename} Mac Wifi Address
+
+  - platform: debug
+ #   device:
+ #     name: ${fdevicename} Device Info
+    reset_reason:
+      name: ${fdevicename} Reset Reason
+  
+binary_sensor:
+  - platform: status
+    name: ${fdevicename} Status
