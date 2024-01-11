@@ -263,33 +263,33 @@ light:
       number: GPIO2
       ignore_strapping_warning: True
 
-font:
-  - file: "fonts/comic-sans-ms/ComicSansMS3.ttf"
-    id: my_font
-    size: 12
+#font:
+#  - file: "fonts/comic-sans-ms/ComicSansMS3.ttf"
+#    id: my_font
+#    size: 12
 
-i2c:
-  sda: GPIO21
-  scl: GPIO22
-  scan: true
-  id: bus_a
+#i2c:
+#  sda: GPIO21
+#  scl: GPIO22
+#  scan: true
+#  id: bus_a
 
-display:
-  - platform: ssd1306_i2c
-    address: 0x3D
-    model: "SSD1306 128x64"
-    id: my_display
-    pages:
-      - id: page1
-        lambda: |-
-          it.print(0, 0, id(my_font), "ESP32 Control Board");
+#display:
+#  - platform: ssd1306_i2c
+#    address: 0x3D
+#    model: "SSD1306 128x64"
+#    id: my_display
+#    pages:
+#      - id: page1
+#        lambda: |-
+#          it.print(0, 0, id(my_font), "ESP32 Control Board");
 
 
-interval:
-  - interval: 100ms
-    then:
-      - display.page.show_next: my_display
-      - component.update: my_display
+#interval:
+#  - interval: 100ms
+#    then:
+#      - display.page.show_next: my_display
+#      - component.update: my_display
 
 sensor:
 #  - platform: aht10
