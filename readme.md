@@ -111,4 +111,4 @@ the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
 | P2 | +3.3V | IO05 | IO23| IO19 | IO18 | IO26 | IO36 | EN |
 
 ## Customer Created Projects Utilizing The ECB
-Ando Roots https://www.printables.com/model/702072-1u-rack-fan-shelf
+Ando Roots: https://www.printables.com/model/702072-1u-rack-fan-shelf
