@@ -1,14 +1,34 @@
-
 # Four automatically controlled PWM fan outputs (J4-J7), each set by four target temperatures, maintained by four Dallas sensor's temperatures. MQTT enabled. Home Assistant API disabled. DHCP enabled.
 # Other control configurations available with modification of Dallas platform LAMBDA function. Contact us at esp32andmore@gmail.com for no cost customization.
 substitutions:
-   alarm_temp: "50" # Threshold for MAX Fan Speed and Alarm when implemented
-   ptemp: "20"
-   itemp: "0.1"
+  devicename: avfan1
+  fdevicename: AVfan1
+  ip: 192.168.0.178 # For static IP adressing
+
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  alarm_temp: "50" # Threshold for alarm when implemented
+  ptemp: "20"
+  itemp: "0.1"
+
+# Connect your Dallas sensors with logger: DEBUG enabled (factory flash default).
+# Open the ESPHome webtool, connect to the ECB board, view the "Logs" window, hit "Reset",
+# and search for Dallas scan addresses and replace the below addresses with your unique ones.
+# Example Scan
+#[18:16:42][D][dallas.sensor:084]:     0x8b3ca8f64935b228 4
+#[18:16:42][D][dallas.sensor:084]:     0x783c0af6490d3628 2
+#[18:16:42][D][dallas.sensor:084]:     0xc13c01f09642c928 1
+#[18:16:42][D][dallas.sensor:084]:     0x043c6ef649772f28 3
+  dallasaddress1: "0xc13c01f09642c928"
+  dallasaddress2: "0x783c0af6490d3628"
+  dallasaddress3: "0x043c6ef649772f28"
+  dallasaddress4: "0x8b3ca8f64935b228"
+
 
 esphome:
-  name: avfan1
-  friendly_name: avfan1
+  name: ${devicename}
+  friendly_name: ${fdevicename}
 
   on_boot:
   - priority: 900.0
@@ -23,21 +43,14 @@ esp32:
 
 preferences:
   flash_write_interval: 10min
-
-#api:
-#  encryption:
-#    key: "itqzvhZMJj8wuTJX0GTOuL/ffESFROzUlmcO0u2+sfo="  #use your own HA generated Key
     
-ota:
-  password: "trek6666"
-# Replace with your Wifi credentials here
 wifi:
-  ssid: "hill"
-  password: "trek6666"
-  fast_connect: true
+  ssid: ${ssid}
+  password: ${password}
+  #fast_connect: true
   #example static IP settings
   #manual_ip:
-    #static_ip: 192.168.0.191
+    #static_ip: ${ip}
     #gateway: 192.168.0.1
     #subnet: 255.255.255.0
     #dns1: 192.168.0.1
@@ -45,10 +58,42 @@ wifi:
 
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
-    ssid: "AVfan1 Fallback Hotspot"
-    password: "trek6666"
+    ssid: ${fdevicename} Fallback Hotspot
+    password: ${password}
+    manual_ip:
+      static_ip: 192.168.100.2
+      gateway: 192.168.100.1
+      subnet: 255.255.255.0
+      dns1: 192.168.0.1
+      dns2: 8.8.8.8
     
 captive_portal:
+
+ota:
+  password: ${password}
+# Replace with your Wifi credentials here
+
+#mqtt:
+  #broker: 192.168.0.100   # use your own MQTT server address and credentials
+#  username: "john"
+#  password: "trek6666"
+
+api:
+  encryption:
+    key: "itqzvhZMJj8wuTJX0GTOuL/ffESFROzUlmcO0u2+sfo="  #use your own HA generated Key
+  
+web_server:
+  port: 80
+
+time:
+  - platform: sntp
+    id: current_time
+
+debug:
+  update_interval: 5s
+
+logger:
+  level: Debug
 
 globals:
   - id: fan1_sum
@@ -88,21 +133,10 @@ globals:
     restore_value: no
     initial_value: "0"
 
-mqtt:
-  broker: 192.168.0.100   # use your own MQTT server address and credentials
-#  username: "john"
-#  password: "trek6666"
-  
-web_server:
-  port: 80
-
-logger:
-  level: Debug
-
 number:
   - platform: template
     id: set_target_temp_1
-    name: "AVfan1 Target Temp 1"
+    name: ${fdevicename} Target Temp 1
     optimistic: True
     min_value: 15
     max_value: 50
@@ -111,11 +145,11 @@ number:
     restore_value: True
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
-    command_topic: avfan1/number/avfan1_target_temp_1/command
+    #command_topic: ${devicename}/number/${devicename}_target_temp_1/command  #add for MQTT
 
   - platform: template
     id: set_target_temp_2
-    name: "AVfan1 Target Temp 2"
+    name: ${fdevicename} Target Temp 2
     optimistic: True
     min_value: 15
     max_value: 50
@@ -124,11 +158,11 @@ number:
     restore_value: true
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
-    command_topic: avfan1/number/avfan1_target_temp_2/command
+    #command_topic: ${devicename}/number/${devicename}_target_temp_2/command  #add for MQTT
 
   - platform: template
     id: set_target_temp_3
-    name: "AVfan1 Target Temp 3"
+    name: ${fdevicename} Target Temp 3
     optimistic: True
     min_value: 15
     max_value: 50
@@ -137,11 +171,11 @@ number:
     restore_value: true
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
-    command_topic: avfan1/number/avfan1_target_temp_3/command
+    #command_topic: ${devicename}/number/${devicename}_target_temp_3/command  #add for MQTT
     
   - platform: template
     id: set_target_temp_4
-    name: "AVfan1 Target Temp 4"
+    name: ${fdevicename} Target Temp 4
     optimistic: True
     min_value: 15
     max_value: 50
@@ -150,7 +184,7 @@ number:
     restore_value: true
     unit_of_measurement: °C
     device_class: "TEMPERATURE"
-    command_topic: avfan1/number/avfan1_target_temp_4/command
+    #command_topic: ${devicename}/number/${devicename}_target_temp_4/command  #add for MQTT
   
 switch:
   - platform: restart
@@ -158,13 +192,13 @@ switch:
 
   - platform: gpio
     name: "AVfan1 Relay 0"
-    pin: GPIO22
+    pin: GPIO16
     id: AVfan1_Relay_0
     restore_mode: restore_default_off
 
   - platform: template
     id: auto_fan1
-    name: "Avfan1 Fan1 Auto Mode"
+    name: ${fdevicename} Fan1 Auto Mode
     restore_mode: RESTORE_DEFAULT_ON
     optimistic: true      
     turn_off_action:
@@ -172,7 +206,7 @@ switch:
 
   - platform: template
     id: auto_fan2
-    name: "Avfan1 Fan2 Auto Mode"
+    name: ${fdevicename} Fan2 Auto Mode
     restore_mode: RESTORE_DEFAULT_ON
     optimistic: true    
     turn_off_action:
@@ -180,7 +214,7 @@ switch:
 
   - platform: template
     id: auto_fan3
-    name: "Avfan1 Fan3 Auto Mode"
+    name: ${fdevicename} Fan3 Auto Mode
     restore_mode: RESTORE_DEFAULT_ON
     optimistic: true  
     turn_off_action:
@@ -188,7 +222,7 @@ switch:
 
   - platform: template
     id: auto_fan4
-    name: "Avfan1 Fan4 Auto Mode"
+    name: ${fdevicename} Fan4 Auto Mode
     restore_mode: RESTORE_DEFAULT_ON
     optimistic: True  
     turn_off_action:
@@ -223,15 +257,39 @@ output:
 light:
   # On-Board LED
   - platform: status_led
-    name: "status light"
+    name: ${fdevicename} Status Light
     id: status_light
-    pin: GPIO2
+    pin:
+      number: GPIO2
+      ignore_strapping_warning: True
+
+font:
+  - file: "fonts/comic-sans-ms/ComicSansMS3.ttf"
+    id: my_font
+    size: 12
 
 i2c:
-  sda: 17
-  scl: 16
+  sda: GPIO21
+  scl: GPIO22
   scan: true
   id: bus_a
+
+display:
+  - platform: ssd1306_i2c
+    address: 0x3D
+    model: "SSD1306 128x64"
+    id: my_display
+    pages:
+      - id: page1
+        lambda: |-
+          it.print(0, 0, id(my_font), "ESP32 Control Board");
+
+
+interval:
+  - interval: 1000ms
+    then:
+      - display.page.show_next: my_display
+      - component.update: my_display
 
 sensor:
 #  - platform: aht10
@@ -244,7 +302,7 @@ sensor:
   - platform: pulse_counter
     pin: GPIO33
     unit_of_measurement: 'rpm'
-    name: "AVfan1 Mon 1"
+    name: ${fdevicename} Mon 1
     update_interval: 5s
     filters:
       - multiply: 0.5
@@ -252,7 +310,7 @@ sensor:
   - platform: pulse_counter
     pin: GPIO34
     unit_of_measurement: 'rpm'
-    name: "AVfan1 Mon 2"
+    name: ${fdevicename} Mon 2
     update_interval: 5s
     filters:
       - multiply: 0.5
@@ -260,7 +318,7 @@ sensor:
   - platform: pulse_counter
     pin: GPIO35
     unit_of_measurement: 'rpm'
-    name: "AVfan1 Mon 3"
+    name: ${fdevicename} Mon 3
     update_interval: 5s
     filters:
       - multiply: 0.5
@@ -268,21 +326,21 @@ sensor:
   - platform: pulse_counter
     pin: GPIO39
     unit_of_measurement: 'rpm'
-    name: "AVfan1 Mon 4"
+    name: ${fdevicename} Mon 4
     update_interval: 5s
     filters:
       - multiply: 0.5       
         
   - platform: wifi_signal
-    name: "AVfan1 WiFi"
+    name: ${fdevicename} WiFi
     update_interval: 30s
   
   - platform: uptime
-    name: "Avfan1 Uptime"
+    name: ${fdevicename} Uptime
     update_interval: 30s
 
   - platform: template
-    name: "AVfan1 CPU Speed"
+    name: ${fdevicename} CPU Speed
     accuracy_decimals: 0
     unit_of_measurement: Mhz
     lambda: |-
@@ -291,27 +349,21 @@ sensor:
 
   - platform: template
     id: sys_esp_temperature
-    name: AVfan1 ESP Temperature
+    name: ${fdevicename} ESP Temperature
     lambda: return temperatureRead();
     unit_of_measurement: °C
     device_class: TEMPERATURE
     update_interval: 30s
 
-# Connect your Dallas sensors with DEBUG enabled and search for your unique device
-# addresses and replace the one-wire addresses below
-#[18:16:42][D][dallas.sensor:084]:     0x8b3ca8f64935b228 4
-#[18:16:42][D][dallas.sensor:084]:     0x783c0af6490d3628 2
-#[18:16:42][D][dallas.sensor:084]:     0xc13c01f09642c928 1
-#[18:16:42][D][dallas.sensor:084]:     0x043c6ef649772f28 3
   - platform: dallas
-    address: 0xc13c01f09642c928
+    address: ${dallasaddress1}
     id: temp1
     filters:
       - filter_out: NaN
       - offset: 0.0
       #- lambda: return x * (9.0/5.0) + 32.0;
     unit_of_measurement: "°C"
-    name: "AVfan1 Temperature 1"
+    name: ${fdevicename} Temperature 1
     on_value: 
       # example using GLOBAL to maintain persistant SUM for each fan
       - lambda: !lambda |
@@ -333,13 +385,13 @@ sensor:
            }
 
   - platform: dallas
-    address: 0x783c0af6490d3628
+    address: ${dallasaddress2}
     id: temp2
     filters:
       - filter_out: NaN
       - offset: 0.0    #Calibration
     unit_of_measurement: "°C"
-    name: "AVfan1 Temperature 2"
+    name: ${fdevicename} Temperature 2
     on_value: 
       - lambda: !lambda |
            if (id(auto_fan2).state) {
@@ -360,13 +412,13 @@ sensor:
            }
 
   - platform: dallas
-    address: 0x043c6ef649772f28
+    address: ${dallasaddress3}
     id: temp3
     filters:
       - filter_out: NaN
       - offset: 0.0   #Calibration
     unit_of_measurement: "°C"
-    name: "AVfan1 Temperature 3"
+    name: ${fdevicename} Temperature 3
     on_value:
       - lambda: !lambda |
            if (id(auto_fan3).state) {
@@ -387,13 +439,13 @@ sensor:
            }
 
   - platform: dallas
-    address: 0x8b3ca8f64935b228
+    address: ${dallasaddress4}
     id: temp4
     filters:
       - filter_out: NaN
       - offset: 0.0   #Calibration
     unit_of_measurement: "°C"
-    name: "AVfan1 Temperature 4"
+    name: ${fdevicename} Temperature 4
     on_value:
       - lambda: !lambda |
            if (id(auto_fan4).state) {
@@ -413,48 +465,65 @@ sensor:
              call.perform();
            }
 
+  - platform: debug
+    free:
+      name: ${fdevicename} Heap Free
+    block:
+      name: ${fdevicename} Heap Max Block
+    loop_time:
+      name: ${fdevicename} Loop Time
+
+
 fan:
   - platform: speed
     output: fan1
     id: fan1_speed
-    name: "AVfan1 Fan1 Speed"
+    name: ${fdevicename} Fan1 Speed
     restore_mode: RESTORE_DEFAULT_OFF
 
   - platform: speed
     output: fan2
     id: fan2_speed
-    name: "AVfan1 Fan2 Speed"
+    name: ${fdevicename} Fan2 Speed
     restore_mode: RESTORE_DEFAULT_OFF
           
   - platform: speed
     output: fan3
     id: fan3_speed
-    name: "AVfan1 Fan3 Speed"
+    name: ${fdevicename} Fan3 Speed
     restore_mode: RESTORE_DEFAULT_OFF
  
   - platform: speed
     output: fan4
     id: fan4_speed
-    name: "AVfan1 Fan4 Speed"
+    name: ${fdevicename} Fan4 Speed
     restore_mode: RESTORE_DEFAULT_OFF
 
 text_sensor:
   - platform: template
-    name: "AVfan1 Device Sensor"
+    name: ${fdevicename} Device Sensor
     lambda: |-
       return {"ESP32 Control Board"};
+
   - platform: version
-    name: "AVfan1 Version"
+    name: ${fdevicename} Version
+
   - platform: wifi_info
     ip_address:
-      name: "AVfan1 IP Address"
+      name: ${fdevicename} IP Address
     ssid:
-      name: "AVfan1 Connected SSID"
+      name: ${fdevicename} Connected SSID
     bssid:
-      name: "AVfan1 Connected BSSID"
+      name: ${fdevicename} Connected BSSID
     mac_address:
-      name: "AVfan1 Mac Wifi Address"
+      name: ${fdevicename} Mac Wifi Address
+
+  - platform: debug
+ #   device:
+ #     name: ${fdevicename} Device Info
+    reset_reason:
+      name: ${fdevicename} Reset Reason
   
 binary_sensor:
   - platform: status
-    name: "AVfan1 Status"
+    name: ${fdevicename} Status
