@@ -18,6 +18,7 @@ ESP32 based board for temperature monitoring/PWM fan control/addressable LED con
 * I/O: USB 2.0 via USB-C connector using the CP2102N.
 * I/O: Standard WEMOS daughter interface on two 1x8 pin headers.
 * I/O: JST SH connector w/ I2C/PDM interface 3.3v/5.0v selectable power (compatible with Adafruit's STEMMA QT/ Sparkfun Qwiic sensors).
+* Add-ons: Relay - uses GPIO16 mapped to the WEMOS daughter interface.
 
 A 3D printed enclosure is also available: https://www.tindie.com/products/29364/
 
