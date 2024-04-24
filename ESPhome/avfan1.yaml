@@ -59,7 +59,7 @@ wifi:
   # Enable fallback hotspot (captive portal) in case wifi connection fails
   ap:
     ssid: ${fdevicename} Fallback Hotspot
-    password: ${password}
+    password: "esphome1"
     manual_ip:
       static_ip: 192.168.100.2
       gateway: 192.168.100.1
@@ -70,7 +70,7 @@ wifi:
 captive_portal:
 
 ota:
-  password: ${password}
+  password: "esphome1"
 # Replace with your Wifi credentials here
 
 #mqtt:
@@ -188,10 +188,10 @@ number:
   
 switch:
   - platform: restart
-    name: "AVfan1 Restart"
+    name: ${fdevicename} Restart
 
   - platform: gpio
-    name: "AVfan1 Relay 0"
+    name: ${fdevicename} Relay 0
     pin: GPIO16
     id: AVfan1_Relay_0
     restore_mode: restore_default_off
