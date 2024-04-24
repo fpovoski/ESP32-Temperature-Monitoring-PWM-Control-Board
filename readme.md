@@ -28,8 +28,7 @@ A 3D printed enclosure is also available: https://www.tindie.com/products/29364/
 needs to match the voltage of the PWM fan (or other device) you are driving. Board has an onboard
 self-resetting flex fuse rated at 12 amps.
 
-* To place on WiFi network use 2.4G phone to connect to "AVFAN1 Fallback Hotspot" and
-update SSID and PASSWORD. Once connected to your WiFi network, to access the webpage of
+* To place on WiFi network use 2.4G phone to connect to "AVFAN1 Fallback Hotspot" with password "esphome1". Once connected to your WiFi network, to access the webpage of
 the device browse to http://avfan1.local
 
 * Device is flashed with an exmaple ESPhome binary image that has manual control over fans 
