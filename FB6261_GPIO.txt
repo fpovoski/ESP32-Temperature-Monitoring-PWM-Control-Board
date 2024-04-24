@@ -4,7 +4,7 @@ For email support: esp32andmore@gmail.com. For telephone support: 1.585.310.1770
 
 See: https://github.com/fpovoski/ESP32-Temperature-Monitoring-PWM-Control-Board
 
-* Home Assistant Condiguration
+* Home Assistant Configuration
 api:
   encryption:
    key: "itqzvhZMJj8wuTJX0GTOuL/ffESFROzUlmcO0u2+sfo="  #use your own HA generated Key
@@ -13,14 +13,15 @@ api:
 needs to match the voltage of the PWM fan (or other device) you are driving. Board has an onboard
 self-resetting flex fuse rated at 12 amps.
 
-* To place on WiFi network use 2.4G phone to connect to "AVFAN1 Fallback Hotspot" and
-update SSID and PASSWORD. Once connected to your WiFi network, to access the webpage of
+* To place on WiFi network use 2.4G phone to connect to "AVFAN1 Fallback Hotspot" with the password "esphome1". Once connected to your WiFi network, to access the webpage of
 the device browse to http://avfan1.local
 
 * Device is flashed with an exmaple ESPhome binary image that has manual control over fans 
-and automatic control which can be enabled based the target temperature setting.  Four temperature
-sensors control each of the four PWM fan connectors.
-Flashed binary image  has "api:" disabled, MQTT enabled.
+and automatic control based on the measured  temperatureand the target temperature setting
+ Four temperature sensors control each of the four PWM fan connectors. The lambda function in the Dallas Platforms
+calculates and sets the corresponding fan speed.
+
+Flashed binary image  has "api:" enabled, MQTT disabled.
 
 * For customization, downlaod the example (flashed) code from 
 https://github.com/fpovoski/ESP32-Temperature-Monitoring-PWM-Control-Board
