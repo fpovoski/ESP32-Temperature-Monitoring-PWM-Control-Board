@@ -20,6 +20,10 @@ ESP32 based board for temperature monitoring/PWM fan control/addressable LED con
 * I/O: JST SH connector w/ I2C/PDM interface 3.3v/5.0v selectable power (compatible with Adafruit's STEMMA QT/ Sparkfun Qwiic sensors).
 * Add-ons: Relay - uses GPIO16 mapped to the WEMOS daughter interface.
 
+Please note that some fans especially older ones do not conform with the "Intel 4-Wire PWM Controller Fans" specification. These fans do not stop spinning with a PWM duty cycle of 0% but spin at their minimum RPM. Below is a list of some of these fans currently known to us:
+* Corsair 31-002319.
+* Delta QFR1212GHE (and very possibly other Delta fans).
+
 A 3D printed enclosure is also available: https://www.tindie.com/products/29364/
 
 ## Setup and Configuration
