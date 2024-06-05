@@ -1,0 +1,425 @@
+# Four automatically controlled PWM fan outputs (J4-J7), each set by four target temperatures, maintained by four Dallas sensor's temperatures. MQTT enabled. Home Assistant API disabled. DHCP enabled.
+# Other control configurations available with modification of Dallas platform LAMBDA function. Contact us at esp32andmore@gmail.com for no cost customization.
+substitutions:
+  devicename: avfan1
+  fdevicename: AVfan1
+  ip: 192.168.0.178 # For static IP adressing
+
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  alarm_temp: "50" # Threshold for alarm when implemented
+  ptemp: "20"
+  itemp: "0.1"
+
+# Connect your Dallas sensors with logger: DEBUG enabled (factory flash default).
+# Open the ESPHome webtool, connect to the ECB board, view the "Logs" window, hit "Reset",
+# and search for Dallas scan addresses and replace the below addresses with your unique ones.
+# Example Scan
+#[18:16:42][D][dallas.sensor:084]:     0x8b3ca8f64935b228 4
+#[18:16:42][D][dallas.sensor:084]:     0x783c0af6490d3628 2
+#[18:16:42][D][dallas.sensor:084]:     0xc13c01f09642c928 1
+#[18:16:42][D][dallas.sensor:084]:     0x043c6ef649772f28 3
+  dallasaddress1: "0xc13c01f09642c928"
+  dallasaddress2: "0x783c0af6490d3628"
+  dallasaddress3: "0x043c6ef649772f28"
+  dallasaddress4: "0x8b3ca8f64935b228"
+
+
+esphome:
+  name: ${devicename}
+  friendly_name: ${fdevicename}
+
+  on_boot:
+  - priority: 900.0
+    then:
+      - lambda: |-
+          id(cpu_speed) = ESP.getCpuFreqMHz();
+
+esp32:
+  board: wemos_d1_mini32
+  framework:
+    type: arduino
+
+preferences:
+  flash_write_interval: 10min
+    
+wifi:
+  ssid: ${ssid}
+  password: ${password}
+  #fast_connect: true
+  #example static IP settings
+  #manual_ip:
+    #static_ip: ${ip}
+    #gateway: 192.168.0.1
+    #subnet: 255.255.255.0
+    #dns1: 192.168.0.1
+    #dns2: 8.8.8.8
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: ${fdevicename} Fallback Hotspot
+    password: "esphome1"
+    manual_ip:
+      static_ip: 192.168.100.2
+      gateway: 192.168.100.2
+      subnet: 255.255.255.0
+
+    
+captive_portal:
+
+ota:
+  password: "esphome1"
+# Replace with your Wifi credentials here
+
+#mqtt:
+  #broker: 192.168.0.100   # use your own MQTT server address and credentials
+#  username: "john"
+#  password: "trek6666"
+
+api:
+  encryption:
+    key: "itqzvhZMJj8wuTJX0GTOuL/ffESFROzUlmcO0u2+sfo="  #use your own HA generated Key
+  
+web_server:
+  port: 80
+
+time:
+  - platform: sntp
+    id: current_time
+
+debug:
+  update_interval: 5s
+
+logger:
+  level: Debug
+
+globals:
+  - id: fan1_sum
+    type: float
+    restore_value: no
+    initial_value: '0'
+
+  - id: target1
+    type: int
+    restore_value: True
+    initial_value: '26'
+
+  - id: cpu_speed
+    type: int
+    restore_value: no
+    initial_value: "0"
+
+number:
+  - platform: template
+    id: set_target_temp_1
+    name: ${fdevicename} Target Temp
+    optimistic: True
+    min_value: 15
+    max_value: 50
+    initial_value: '26'
+    step: 1
+    restore_value: True
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+    #command_topic: ${devicename}/number/${devicename}_target_temp_1/command  #add for MQTT
+
+
+  - platform: template
+    id: set_alarm_temp
+    name: ${fdevicename} Alarm Temp
+    optimistic: True
+    min_value: 15
+    max_value: 80
+    initial_value: ${alarm_temp}
+    step: 1
+    restore_value: true
+    unit_of_measurement: °C
+    device_class: "TEMPERATURE"
+  
+switch:
+  - platform: restart
+    name: ${fdevicename} Restart
+
+  - platform: gpio
+    name: ${fdevicename} Relay 0
+    pin: GPIO16
+    id: relay_0
+    restore_mode: restore_default_off
+
+  - platform: template
+    id: auto_fan1
+    name: ${fdevicename} Auto Mode
+    restore_mode: RESTORE_DEFAULT_ON
+    optimistic: true      
+    turn_off_action:
+      - fan.turn_off : fan1_speed
+      - fan.turn_off : fan2_speed
+      - fan.turn_off : fan3_speed
+      - fan.turn_off : fan4_speed
+
+
+  
+dallas:
+  - pin: GPIO27
+    update_interval: 5s
+  
+output:
+  - platform: ledc
+    pin: GPIO13
+    id: fan1
+    frequency: 25600Hz
+    
+  - platform: ledc
+    pin: GPIO14
+    id: fan2
+    frequency: 25600Hz
+    
+  - platform: ledc
+    pin: GPIO25
+    id: fan3
+    frequency: 25600Hz
+    
+  - platform: ledc
+    pin: GPIO32
+    id: fan4
+    frequency: 25600Hz
+
+  - platform: ledc
+    pin:
+      number: GPIO2
+      ignore_strapping_warning: True
+    id: gpio_02
+
+light:
+  - platform: monochromatic
+    id: alarm_light
+    output: gpio_02
+    name: ${fdevicename} Alarm Light
+    effects:
+      - pulse:
+          name: "Fast Pulse"
+          transition_length: 0.5s
+          update_interval: 0.5s
+          min_brightness: 0%
+          max_brightness: 100%
+ 
+
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  id: bus_a
+
+
+
+sensor:
+#  - platform: aht10
+#    temperature:
+#      name: "AVfan1 Room Temperature"
+#    humidity:
+#      name: "AVfan1 Room Humidity"
+#    update_interval: 5s
+
+  - platform: pulse_counter
+    pin: GPIO33
+    unit_of_measurement: 'rpm'
+    name: ${fdevicename} Mon 1
+    update_interval: 5s
+    filters:
+      - multiply: 0.5
+
+  - platform: pulse_counter
+    pin: GPIO34
+    unit_of_measurement: 'rpm'
+    name: ${fdevicename} Mon 2
+    update_interval: 5s
+    filters:
+      - multiply: 0.5
+
+  - platform: pulse_counter
+    pin: GPIO35
+    unit_of_measurement: 'rpm'
+    name: ${fdevicename} Mon 3
+    update_interval: 5s
+    filters:
+      - multiply: 0.5
+
+  - platform: pulse_counter
+    pin: GPIO39
+    unit_of_measurement: 'rpm'
+    name: ${fdevicename} Mon 4
+    update_interval: 5s
+    filters:
+      - multiply: 0.5       
+        
+  - platform: wifi_signal
+    name: ${fdevicename} WiFi
+    update_interval: 30s
+  
+  - platform: uptime
+    name: ${fdevicename} Uptime
+    update_interval: 30s
+
+  - platform: template
+    name: ${fdevicename} CPU Speed
+    accuracy_decimals: 0
+    unit_of_measurement: Mhz
+    lambda: |-
+      return (id(cpu_speed));
+    entity_category: "diagnostic"
+
+  - platform: template
+    id: sys_esp_temperature
+    name: ${fdevicename} ESP Temperature
+    lambda: return temperatureRead();
+    unit_of_measurement: °C
+    device_class: TEMPERATURE
+    update_interval: 30s
+
+  - platform: dallas
+    #address: ${dallasaddress1}
+    index: 0
+    id: temp1
+    filters:
+      - filter_out: NaN
+      - offset: 0.0
+      #- lambda: return x * (9.0/5.0) + 32.0;
+    unit_of_measurement: "°C"
+    name: ${fdevicename} Temperature 1
+    on_value:
+
+      - if: 
+          condition:
+            for:
+              time: 10s
+              condition:
+                lambda: 'return id(temp1).state >= id(set_alarm_temp).state;'
+          then: 
+            - light.turn_on:
+                id: alarm_light
+                effect: 'Fast Pulse'
+            - lambda: !lambda |-
+                id(alarm_sen).publish_state(true);
+          else: 
+            - light.turn_off:
+                id: alarm_light
+            - lambda: !lambda |-
+                id(alarm_sen).publish_state(false);
+      # example using GLOBAL to maintain persistant SUM for each fan
+      - lambda: !lambda |
+          if (id(auto_fan1).state) {
+            float fan_actual_temp =  id(temp1).state;
+            float fan_desired_temp = id(set_target_temp_1).state;
+            float diff = fan_actual_temp - fan_desired_temp;
+            id(fan1_sum) =id(fan1_sum) + diff;
+            float fan_pdiff=diff * $ptemp;
+            float fan_idiff= id(fan1_sum) * $itemp;
+            float fan_set_speed = fan_pdiff + fan_idiff;
+            if (fan_set_speed >100) fan_set_speed =100;
+            if (fan_set_speed <10) fan_set_speed=1;
+            if (id(fan1_sum) >100) id(fan1_sum) = 100;
+            if (id(fan1_sum) < -100) id(fan1_sum) = -100;
+            if (fan_set_speed <10) {
+              fan_set_speed=1;
+              auto calloff1 = id(fan1_speed).turn_off();           
+              calloff1.set_speed(fan_set_speed);
+              calloff1.perform();
+
+              auto calloff2 = id(fan2_speed).turn_off();           
+              calloff2.set_speed(fan_set_speed);
+              calloff2.perform();
+
+              auto calloff3 = id(fan3_speed).turn_off();           
+              calloff3.set_speed(fan_set_speed);
+              calloff3.perform();
+
+              auto calloff4 = id(fan4_speed).turn_off();           
+              calloff4.set_speed(fan_set_speed);
+              calloff4.perform();
+            } else {
+              auto call1 = id(fan1_speed).turn_on();
+              call1.set_speed(fan_set_speed);
+              call1.perform();
+
+              auto call2 = id(fan2_speed).turn_on();
+              call2.set_speed(fan_set_speed);
+              call2.perform();
+
+              auto call3 = id(fan3_speed).turn_on();
+              call3.set_speed(fan_set_speed);
+              call3.perform();
+
+              auto call4 = id(fan4_speed).turn_on();
+              call4.set_speed(fan_set_speed);
+              call4.perform();
+            }
+          }
+
+
+  - platform: debug
+    free:
+      name: ${fdevicename} Heap Free
+    block:
+      name: ${fdevicename} Heap Max Block
+    loop_time:
+      name: ${fdevicename} Loop Time
+
+
+fan:
+  - platform: speed
+    output: fan1
+    id: fan1_speed
+    name: ${fdevicename} Fan1 Speed
+    restore_mode: RESTORE_DEFAULT_OFF
+
+  - platform: speed
+    output: fan2
+    id: fan2_speed
+    name: ${fdevicename} Fan2 Speed
+    restore_mode: RESTORE_DEFAULT_OFF
+          
+  - platform: speed
+    output: fan3
+    id: fan3_speed
+    name: ${fdevicename} Fan3 Speed
+    restore_mode: RESTORE_DEFAULT_OFF
+ 
+  - platform: speed
+    output: fan4
+    id: fan4_speed
+    name: ${fdevicename} Fan4 Speed
+    restore_mode: RESTORE_DEFAULT_OFF
+
+text_sensor:
+  - platform: template
+    name: ${fdevicename} Device Sensor
+    lambda: |-
+      return {"ESP32 Control Board"};
+
+  - platform: version
+    name: ${fdevicename} Version
+
+  - platform: wifi_info
+    ip_address:
+      name: ${fdevicename} IP Address
+    ssid:
+      name: ${fdevicename} Connected SSID
+    bssid:
+      name: ${fdevicename} Connected BSSID
+    mac_address:
+      name: ${fdevicename} Mac Wifi Address
+
+  - platform: debug
+ #   device:
+ #     name: ${fdevicename} Device Info
+    reset_reason:
+      name: ${fdevicename} Reset Reason
+  
+binary_sensor:
+  - platform: status
+    name: ${fdevicename} Status
+  - platform: template
+    id: alarm_sen
+    name: ${fdevicename} Alarm
+    icon: mdi:fire
