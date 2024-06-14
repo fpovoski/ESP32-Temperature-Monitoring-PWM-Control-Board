@@ -48,8 +48,7 @@ https://github.com/fpovoski/ESP32-Temperature-Monitoring-PWM-Control-Board/blob/
 * Flash over USB or ethernet. To flash over USB use ESPhome Web Flasher https://web.esphome.io/
 with the device powered and connected to your host machine.
 
-* For Dallas style sensors (board preprogrammed with logger level: DEBUG), to get device ID follow
-the ESPhome instructions: https://esphome.io/components/sensor/dallas.html.
+*  For Dallas temperature sensors, the factory firmware is now flashed using “Indexed” sensor addressing. Just add your sensors and by raising the temperature on each one individually you can determine the number of the sensor.  
 
 * For adding Wemos style boards (i.e., relay) with the case installed  use the long (19mm) provided pins.
 
