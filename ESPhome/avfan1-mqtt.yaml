@@ -72,14 +72,15 @@ ota:
   password: "esphome1"
 # Replace with your Wifi credentials here
 
-#mqtt:
-  #broker: 192.168.0.100   # use your own MQTT server address and credentials
-#  username: "john"
-#  password: "trek6666"
+mqtt:
+  broker: 192.168.1.200  # use your own MQTT server address and credentials
+  username: "admin"
+  password: "admin"
+  reboot_timeout: 0s
 
-api:
-  encryption:
-    key: "itqzvhZMJj8wuTJX0GTOuL/ffESFROzUlmcO0u2+sfo="  #use your own HA generated Key
+#api:
+  #encryption:
+    #key: "itqzvhZMJj8wuTJX0GTOuL/ffESFROzUlmcO0u2+sfo="  #use your own HA generated Key
   
 web_server:
   port: 80
@@ -433,7 +434,7 @@ sensor:
 
   - platform: dallas
     #address: ${dallasaddress2}
-    index: 1
+    index: 1    
     id: temp2
     filters:
       - filter_out: NaN
