@@ -13,7 +13,7 @@ ESP32 based board for temperature monitoring/PWM fan control/addressable LED con
 * Power Input: 12v @ 10 amps max via 5.5mm x 2.1/2.5mm barrel connector or 5v via USB-C connector.
 * 12 amp resettable fused input power.
 * On Board Regulation: 5v @ 2 amps switching regulator, 3.3v @ 1.0 amp.
-* Input/Output: One 5v tolerant input (1k pullup) and one 5v driven output, with 12V power (7+ amps per conn.) and ground on four, four-pin Molex KK series connectors. Compatible with most PWM PC style fans with speed return. Of course other use cases for these interfaces such as driving LED strings are available.
+* Input/Output: One 5v tolerant input (1k pullup) and one 5v driven output, with 12V power (4.5+ amps per conn.) and ground on four, four-pin Molex KK series connectors. Compatible with most PWM PC style fans with speed return. Of course other use cases for these interfaces such as driving LED strings are available.
 * I/O: Three screw down three position headers with common one-wire interface as well as 3.3v power and ground.
 * I/O: USB 2.0 via USB-C connector using the CP2102N.
 * I/O: Standard WEMOS daughter interface on two 1x8 pin headers.
