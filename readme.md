@@ -61,8 +61,11 @@ with the device powered and connected to your host machine.
 | --------- | ---- | ---- | ---- |
 | J1 | +3.3V | IO27 | GND |
 | J2 | +3.3V | IO27 | GND |
-| J3 | +3.3V | IO27 | GND |
 
+### Buffer Open-Collector Ouput on 2.54mm Header
+| CONNECTOR | PIN1 | PIN2 |
+| --------- | ---- | ---- |
+| J3 | GND | IO26(OC) |
 
 ### PWM Fan/LED KK Style Connectors J4-J7
 - PIN3 - Input 5V tolerant with 1K pullup resistor
