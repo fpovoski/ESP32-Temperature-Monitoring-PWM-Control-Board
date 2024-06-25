@@ -62,7 +62,7 @@ with the device powered and connected to your host machine.
 | J1 | +3.3V | IO27 | GND |
 | J2 | +3.3V | IO27 | GND |
 
-### Buffer Open-Collector Ouput on 2.54mm Header
+### Buffer Open-Collector Ouput on 2.54mm Header J3
 | CONNECTOR | PIN1 | PIN2 |
 | --------- | ---- | ---- |
 | J3 | GND | IO26(OC) |
@@ -70,7 +70,7 @@ with the device powered and connected to your host machine.
 ### PWM Fan/LED KK Style Connectors J4-J7
 - PIN3 - Input 5V tolerant with 1K pullup resistor
 - PIN4 - Output 5V drive.
-- PWR - Matches input voltage on J9. Rated to 7 amps.
+- PWR - Matches input voltage on J9. Rated to 4.5 amps.
 			
 | CONNECTOR | PIN1 | PIN2 | PIN3 | PIN4 |
 | --------- | ---- | ---- | ---- | ---- |
