@@ -58,16 +58,16 @@ with the device powered and connected to your host machine.
 
 <img src="work/Fan_Control_Board.0.8.B_rot.png" width=400>
 
-### Dallas One-wire Screw Terminal Connectors J1-J3
-| CONNECTOR | PIN1 | PIN2 | PIN3 |
-| --------- | ---- | ---- | ---- |
-| J1 | +3.3V | IO27 | GND |
-| J2 | +3.3V | IO27 | GND |
-
 ### Buffer Open-Collector Ouput on 2.54mm Header J3
 | CONNECTOR | PIN1 | PIN2 |
 | --------- | ---- | ---- |
-| J3 | GND | IO26(OC) |
+| J1 | GND | IO26(OC) |
+
+### Dallas One-wire Screw Terminal Connectors J1-J3
+| CONNECTOR | PIN1 | PIN2 | PIN3 |
+| --------- | ---- | ---- | ---- |
+| J2 | +3.3V | IO27 | GND |
+| J3 | +3.3V | IO27 | GND |
 
 ### PWM Fan/LED KK Style Connectors J4-J7
 - PIN3 - Input 5V tolerant with 1K pullup resistor
