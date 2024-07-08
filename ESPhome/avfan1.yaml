@@ -69,8 +69,10 @@ wifi:
 captive_portal:
 
 ota:
-  password: "esphome1"
-# Replace with your Wifi credentials here
+  - platform: esphome
+    password: "esphome1"
+
+#safe_mode:
 
 #mqtt:
   #broker: 192.168.0.100   # use your own MQTT server address and credentials
@@ -203,7 +205,7 @@ switch:
 
   - platform: gpio
     name: ${fdevicename} Relay 0
-    pin: GPIO16
+    pin: GPIO18
     id: relay_0
     restore_mode: restore_default_off
 
@@ -238,10 +240,21 @@ switch:
     optimistic: True  
     turn_off_action:
       - fan.turn_off : fan4_speed
+
+  - platform: gpio
+    id: oc_port
+    name: ${fdevicename} OC Port
+    restore_mode: ALWAYS_ON
+    pin:
+      number: 26
+      mode:
+        output: true
+        pullup: true
   
-dallas:
-  - pin: GPIO27
-    update_interval: 5s
+one_wire:
+  - platform: gpio
+    pin: GPIO27
+
   
 output:
   - platform: ledc
@@ -290,13 +303,19 @@ font:
     size: 12
 
 i2c:
-  sda: GPIO21
-  scl: GPIO22
-  scan: true
-  id: bus_a
+  - id: bus_a
+    sda: GPIO21
+    scl: GPIO22
+    scan: false
+  - id: bus_b
+    sda: GPIO16
+    scl: GPIO17
+    scan: False
+    frequency: 800khz
 
 display:
   - platform: ssd1306_i2c
+    i2c_id: bus_a
     address: 0x3D
     model: "SSD1306 128x64"
     id: my_display
@@ -313,12 +332,19 @@ interval:
       - component.update: my_display
 
 sensor:
-#  - platform: aht10
-#    temperature:
-#      name: "AVfan1 Room Temperature"
-#    humidity:
-#      name: "AVfan1 Room Humidity"
-#    update_interval: 5s
+  - platform: aht10
+    i2c_id: bus_b
+    address: 0x38
+    variant: AHT20
+    temperature:
+      id: temp0
+      name: ${fdevicename} Onboard Temperature
+      filters:
+      - filter_out: NaN
+      - offset: -4.0
+    humidity:
+      name: ${fdevicename} Onboard Humidity
+    update_interval: 5s
 
   - platform: pulse_counter
     pin: GPIO33
@@ -376,9 +402,10 @@ sensor:
     device_class: TEMPERATURE
     update_interval: 30s
 
-  - platform: dallas
-    #address: ${dallasaddress1}
-    index: 0
+  - platform: dallas_temp
+    address: ${dallasaddress1}
+    update_interval: 2s
+    #index: 0
     id: temp1
     filters:
       - filter_out: NaN
@@ -431,9 +458,10 @@ sensor:
             }
           }
 
-  - platform: dallas
-    #address: ${dallasaddress2}
-    index: 1
+  - platform: dallas_temp
+    address: ${dallasaddress2}
+    update_interval: 2s
+    #index: 1
     id: temp2
     filters:
       - filter_out: NaN
@@ -451,7 +479,7 @@ sensor:
           then: 
             - light.turn_on:
                 id: alarm_light
-                effect: fast_pulse
+                effect: 'Fast Pulse'
             - lambda: !lambda |-
                 id(alarm_sen).publish_state(true);
           else: 
@@ -483,9 +511,10 @@ sensor:
             }
           }
 
-  - platform: dallas
-    #address: ${dallasaddress3}
-    index: 2
+  - platform: dallas_temp
+    address: ${dallasaddress3}
+    update_interval: 2s
+    #index: 2
     id: temp3
     filters:
       - filter_out: NaN
@@ -502,7 +531,7 @@ sensor:
           then: 
             - light.turn_on:
                 id: alarm_light
-                effect: fast_pulse
+                effect: 'Fast Pulse'
             - lambda: !lambda |-
                 id(alarm_sen).publish_state(true);
           else: 
@@ -534,9 +563,10 @@ sensor:
             }
           }
 
-  - platform: dallas
-    #address: ${dallasaddress4}
-    index: 3
+  - platform: dallas_temp
+    address: ${dallasaddress4}
+    update_interval: 2s
+    #index: 3
     id: temp4
     filters:
       - filter_out: NaN
@@ -553,7 +583,7 @@ sensor:
           then: 
             - light.turn_on:
                 id: alarm_light
-                effect: fast_pulse
+                effect: 'Fast Pulse'
             - lambda: !lambda |-
                 id(alarm_sen).publish_state(true);
           else: 
