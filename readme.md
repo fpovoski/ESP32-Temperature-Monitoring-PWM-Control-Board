@@ -68,7 +68,7 @@ Seach for them in the initial logger output when connected to the USB port using
 
 ## Connector to GPIO Mapping.
 
-<img src="work/Fan_Control_Board.0.8.B_rot.png" width=400>
+<img src="work/Fan_Control_Board.0.8.B_rot.PNG" width=400>
 
 ### Buffer Open-Collector Ouput on 2.54mm Header J3
 | CONNECTOR | PIN1 | PIN2 |
