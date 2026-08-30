@@ -298,7 +298,10 @@ light:
  
 
 font:
-  - file: "fonts/comic-sans-ms/ComicSansMS3.ttf"
+  # Was "fonts/comic-sans-ms/ComicSansMS3.ttf" — that file is not in this
+  # repo, so the example failed to validate before reaching anything else.
+  # gfonts:// is fetched at build time and needs no bundled font.
+  - file: "gfonts://Roboto"
     id: my_font
     size: 12
 
