@@ -100,10 +100,11 @@ Seach for them in the initial logger output when connected to the USB port using
 - +5-14V 12 amps max.
 - Directly supplies J4-J7 PWR
 - Must match your fan or LED voltage.
+- Center-positive: the center pin is +5-14V, the barrel/sleeve is GND.
 
 | CONNECTOR | Center | Perimeter |
 | --------- | ---- | ---- |
-| J9 | GND | +5-14V | GND |
+| J9 | +5-14V | GND |
 
 ### I2C/PDM JST SH Connector J10
 - Direct Interface for STEMMA and QWIIC boards typically using I2C or PDM.
